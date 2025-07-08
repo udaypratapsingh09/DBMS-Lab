@@ -1,0 +1,948 @@
+mysql> CREATE TABLE EMPLOYEE
+    -> (e_id int PRIMARY KEY,
+    -> name varchar(20),
+    -> street varchar(20),
+    -> city varchar(20));
+ERROR 1046 (3D000): No database selected
+mysql> use EMP;
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+
+Database changed
+mysql> CREATE TABLE EMPLOYEE
+    ->      (e_id int PRIMARY KEY,
+    ->      name varchar(20),
+    ->      street varchar(20),
+    ->      city varchar(20));
+Query OK, 0 rows affected (0.15 sec)
+
+mysql> CREATE TABLE WORKS
+    ->      (e_id int, company_name varchar(30), salary int);
+Query OK, 0 rows affected (0.24 sec)
+
+mysql> CREATE TABLE COMPANY
+    ->      (company_name varchar(30));
+Query OK, 0 rows affected (0.19 sec)
+
+mysql> ALTER TABLE COMPANY
+    ->      ADD COLUMN
+    ->      (city varchar(20));
+Query OK, 0 rows affected (0.30 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> DESCRIBE COMPANY;
++--------------+-------------+------+-----+---------+-------+
+| Field        | Type        | Null | Key | Default | Extra |
++--------------+-------------+------+-----+---------+-------+
+| company_name | varchar(30) | YES  |     | NULL    |       |
+| city         | varchar(20) | YES  |     | NULL    |       |
++--------------+-------------+------+-----+---------+-------+
+2 rows in set (0.00 sec)
+
+mysql> CREATE TABLE MANAGES(e_id int, dept_name varchar(20));
+Query OK, 0 rows affected (0.19 sec)
+
+mysql> ALTER TABLE COMPANY ADD PRIMARY KEY (company_name, city);
+Query OK, 0 rows affected (0.30 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> DESCRIBE EMPLOYEE;
++--------+-------------+------+-----+---------+-------+
+| Field  | Type        | Null | Key | Default | Extra |
++--------+-------------+------+-----+---------+-------+
+| e_id   | int(11)     | NO   | PRI | NULL    |       |
+| name   | varchar(20) | YES  |     | NULL    |       |
+| street | varchar(20) | YES  |     | NULL    |       |
+| city   | varchar(20) | YES  |     | NULL    |       |
++--------+-------------+------+-----+---------+-------+
+4 rows in set (0.00 sec)
+
+mysql> INSERT INTO EMPLOYEE (e_id, name, street, city) VALUES
+    ->      (1, 'Aarav Sharma', 'MG Road', 'Delhi'),
+    ->      (2, 'Priya Verma', 'Brigade Road', 'Bangalore'),
+    ->      (3, 'Rahul Mehta', 'Park Street', 'Kolkata'),
+    ->      (4, 'Sneha Iyer', 'Anna Salai', 'Chennai'),
+    ->      (5, 'Vikram Reddy', 'Banjara Hills', 'Hyderabad'),
+    ->      (6, 'Kriti Singh', 'FC Road', 'Pune'),
+    ->      (7, 'Rohan Das', 'Hazratganj', 'Lucknow'),
+    ->      (8, 'Ananya Joshi', 'Law Garden', 'Ahmedabad'),
+    ->      (9, 'Siddharth Rao', 'Gokulpeth Road', 'Nagpur'),
+    ->      (10, 'Meera Nair', 'Marine Drive', 'Mumbai'),
+    ->      (11, 'Yash Patel', 'Ellis Bridge', 'Surat'),
+    ->      (12, 'Isha Kapoor', 'Rajpur Road', 'Dehradun'),
+    ->      (13, 'Aditya Roy', 'Civil Lines', 'Kanpur'),
+    ->      (14, 'Tanvi Deshmukh', 'Nehru Place', 'Delhi'),
+    ->      (15, 'Arjun Bhatt', 'Ashram Road', 'Ahmedabad');
+Query OK, 15 rows affected (0.04 sec)
+Records: 15  Duplicates: 0  Warnings: 0
+
+mysql> DESCRIBE WORKS;
++--------------+-------------+------+-----+---------+-------+
+| Field        | Type        | Null | Key | Default | Extra |
++--------------+-------------+------+-----+---------+-------+
+| e_id         | int(11)     | YES  |     | NULL    |       |
+| company_name | varchar(30) | YES  |     | NULL    |       |
+| salary       | int(11)     | YES  |     | NULL    |       |
++--------------+-------------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
+
+mysql> DROP TABLE WORKS;
+Query OK, 0 rows affected (0.10 sec)
+
+mysql> CREATE TABLE WORKS
+    -> (e_id int PRIMARY KEY,
+    -> company_name varchar(30) references \c
+mysql> CREATE TABLE WORKS
+    -> (e_id int references EMPLOYEE.e_id,
+    -> company_name varchar(30) references COMPANY.company_name
+    -> salary int);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'salary int)' at line 4
+mysql> CREATE TABLE WORKS
+    -> (e_id int references EMPLOYEE.e_id,
+    -> company_name varchar(30) references COMPANY.company_name,
+    -> salary int);
+Query OK, 0 rows affected (0.18 sec)
+
+mysql> SHOW TABLES;
++---------------+
+| Tables_in_EMP |
++---------------+
+| ACC_EMP       |
+| COMPANY       |
+| EMPLOYEE      |
+| MANAGES       |
+| WORKS         |
+| acc_emp       |
++---------------+
+6 rows in set (0.00 sec)
+
+mysql> DROP TABLE ACC_EMP, acc_emp;
+ERROR 1051 (42S02): Unknown table 'EMP.ACC_EMP,EMP.acc_emp'
+mysql> DROP VIEW ACC_EMP, acc_emp;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> DESCRIBE MANAGES;
++-----------+-------------+------+-----+---------+-------+
+| Field     | Type        | Null | Key | Default | Extra |
++-----------+-------------+------+-----+---------+-------+
+| e_id      | int(11)     | YES  |     | NULL    |       |
+| dept_name | varchar(20) | YES  |     | NULL    |       |
++-----------+-------------+------+-----+---------+-------+
+2 rows in set (0.00 sec)
+
+mysql> ALTER TABLE MANAGES
+    -> MODIFY COLUMN e_id references EMPLOYEE.e_id;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'references EMPLOYEE.e_id' at line 2
+mysql> ALTER TABLE MANAGES
+    -> MODIFY COLUMN e_id int references EMPLOYEE.e_id;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'references EMPLOYEE.e_id' at line 2
+mysql> ALTER TABLE MANAGES
+    -> DROP COLUMN e_id;
+Query OK, 0 rows affected (0.40 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> ALTER TABLE MANAGES
+    -> ADD COLUMN e_id int references EMPLOYEE.e_id;
+Query OK, 0 rows affected (0.30 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> UPDATE EMPLOYEE
+    ->      SET city='Pune'
+    ->      WHERE city='Lucknow';
+Query OK, 1 row affected (0.02 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> UPDATE EMPLOYEE
+    ->      SET city = 'Delhi'
+    ->      WHERE city = 'Nagpur' OR city = 'Kanpur'
+    ->      ;
+Query OK, 2 rows affected (0.04 sec)
+Rows matched: 2  Changed: 2  Warnings: 0
+
+mysql> SELECT DISTINCT city from COMPANY
+    -> ;
+Empty set (0.00 sec)
+
+mysql> SELECT * FROM COMPANY;
+Empty set (0.00 sec)
+
+mysql> INSERT INTO COMPANY VALUES
+    -> ('Accenture', 'Delhi',
+    -> \c
+mysql> INSERT INTO COMPANY VALUES
+    -> ('Accenture', 'Delhi'),
+    -> ('CISCO', 'KOLKATA'),
+    -> ('Infosys', 'Bangalore'),
+    -> ('Mahindra', 'Mumbai'),
+    -> ('Tata', 'Ahmedabad'),
+    -> ('TCS', 'Pune'),
+    -> ('Wipro', 'Dehradun');
+Query OK, 7 rows affected (0.02 sec)
+Records: 7  Duplicates: 0  Warnings: 0
+
+mysql> DESCRIBE WORKS;
++--------------+-------------+------+-----+---------+-------+
+| Field        | Type        | Null | Key | Default | Extra |
++--------------+-------------+------+-----+---------+-------+
+| e_id         | int(11)     | YES  |     | NULL    |       |
+| company_name | varchar(30) | YES  |     | NULL    |       |
+| salary       | int(11)     | YES  |     | NULL    |       |
++--------------+-------------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
+
+mysql> ALTER TABLE WORKS
+    -> DROP COLUMN e_id, company_name;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'company_name' at line 2
+mysql> use EMP;
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+
+Database changed
+mysql> ALTER TABLE WORKS
+    -> DROP COLUMNS e_id, company_name;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'e_id, company_name' at line 2
+mysql> ALTER TABLE WORKS
+    -> DROP COLUMN e_id, company_name;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'company_name' at line 2
+mysql> ALTER TABLE WORKS
+    -> DROP COLUMN e_id;
+Query OK, 0 rows affected (0.33 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> ALTER TABLE WORKS
+    -> DROP COLUMN company_name;
+Query OK, 0 rows affected (0.30 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> ALTER TABLE WORKS
+    -> ADD COLUMN e_id int references EMPLOYEE.e_id;
+Query OK, 0 rows affected (0.31 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> ALTER TABLE WORKS
+    -> ADD COLUMN company_name varchar(30) references COMPANY.company_name;
+Query OK, 0 rows affected (0.31 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> DESCRIBE WORKS;
++--------------+-------------+------+-----+---------+-------+
+| Field        | Type        | Null | Key | Default | Extra |
++--------------+-------------+------+-----+---------+-------+
+| salary       | int(11)     | YES  |     | NULL    |       |
+| e_id         | int(11)     | YES  |     | NULL    |       |
+| company_name | varchar(30) | YES  |     | NULL    |       |
++--------------+-------------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
+
+mysql> INSERT INTO WORKS
+    ->      (e_id, company_name)
+    ->      SELECT EMPLOYEE.e_id, COMPANY.company_name
+    ->      FROM EMPLOYEE, COMPANY
+    ->      WHERE COMPANY.city = EMPLOYEE.city;
+Query OK, 12 rows affected (0.08 sec)
+Records: 12  Duplicates: 0  Warnings: 0
+
+mysql> SELECT * FROM EMPLOYEE;
++------+----------------+----------------+-----------+
+| e_id | name           | street         | city      |
++------+----------------+----------------+-----------+
+|    1 | Aarav Sharma   | MG Road        | Delhi     |
+|    2 | Priya Verma    | Brigade Road   | Bangalore |
+|    3 | Rahul Mehta    | Park Street    | Kolkata   |
+|    4 | Sneha Iyer     | Anna Salai     | Chennai   |
+|    5 | Vikram Reddy   | Banjara Hills  | Hyderabad |
+|    6 | Kriti Singh    | FC Road        | Pune      |
+|    7 | Rohan Das      | Hazratganj     | Pune      |
+|    8 | Ananya Joshi   | Law Garden     | Ahmedabad |
+|    9 | Siddharth Rao  | Gokulpeth Road | Delhi     |
+|   10 | Meera Nair     | Marine Drive   | Mumbai    |
+|   11 | Yash Patel     | Ellis Bridge   | Surat     |
+|   12 | Isha Kapoor    | Rajpur Road    | Dehradun  |
+|   13 | Aditya Roy     | Civil Lines    | Delhi     |
+|   14 | Tanvi Deshmukh | Nehru Place    | Delhi     |
+|   15 | Arjun Bhatt    | Ashram Road    | Ahmedabad |
++------+----------------+----------------+-----------+
+15 rows in set (0.00 sec)
+
+mysql> SELECT * FROM WORKS;
++--------+------+--------------+
+| salary | e_id | company_name |
++--------+------+--------------+
+|   NULL |    1 | Accenture    |
+|   NULL |    2 | Infosys      |
+|   NULL |    3 | CISCO        |
+|   NULL |    6 | TCS          |
+|   NULL |    7 | TCS          |
+|   NULL |    8 | Tata         |
+|   NULL |    9 | Accenture    |
+|   NULL |   10 | Mahindra     |
+|   NULL |   12 | Wipro        |
+|   NULL |   13 | Accenture    |
+|   NULL |   14 | Accenture    |
+|   NULL |   15 | Tata         |
++--------+------+--------------+
+12 rows in set (0.00 sec)
+
+mysql> DELETE FROM WORKS;
+Query OK, 12 rows affected (0.04 sec)
+
+mysql> UPDATE EMPLOYEE SET city = 'Mumbai' WHERE city in ('Chennai', 'Hyderabad', 'Surat');
+Query OK, 3 rows affected (0.02 sec)
+Rows matched: 3  Changed: 3  Warnings: 0
+
+mysql> INSERT INTO WORKS
+    ->      (e_id, company_name)
+    -> n
+    -> SELECT EMPLOYEE.e_id, COMPANY.company_name
+    -> FROM EMPLOYEE, COMPANY
+    -> WHERE COMPANY.city = EMPLOYEE.city;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'n
+SELECT EMPLOYEE.e_id, COMPANY.company_name
+FROM EMPLOYEE, COMPANY
+WHERE COMPAN' at line 3
+mysql> INSERT INTO WORKS
+    ->      (e_id, company_name)
+    ->      SELECT EMPLOYEE.e_id, COMPANY.company_name
+    ->      FROM EMPLOYEE, COMPANY
+    ->      WHERE COMPANY.city = EMPLOYEE.city;
+Query OK, 15 rows affected (0.12 sec)
+Records: 15  Duplicates: 0  Warnings: 0
+
+mysql> SELECT * FROM WORKS;
++--------+------+--------------+
+| salary | e_id | company_name |
++--------+------+--------------+
+|   NULL |    1 | Accenture    |
+|   NULL |    2 | Infosys      |
+|   NULL |    3 | CISCO        |
+|   NULL |    4 | Mahindra     |
+|   NULL |    5 | Mahindra     |
+|   NULL |    6 | TCS          |
+|   NULL |    7 | TCS          |
+|   NULL |    8 | Tata         |
+|   NULL |    9 | Accenture    |
+|   NULL |   10 | Mahindra     |
+|   NULL |   11 | Mahindra     |
+|   NULL |   12 | Wipro        |
+|   NULL |   13 | Accenture    |
+|   NULL |   14 | Accenture    |
+|   NULL |   15 | Tata         |
++--------+------+--------------+
+15 rows in set (0.00 sec)
+
+mysql> ALTER TABLE WORKS
+    -> DROP COLUMN salary;
+Query OK, 0 rows affected (0.43 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> ALTER TABLE WORKS
+    -> ADD COLUMN salary int;
+Query OK, 0 rows affected (0.50 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> UPDATE WORKS SET salary=50000 WHERE company_name = 'Accenture';
+Query OK, 4 rows affected (0.02 sec)
+Rows matched: 4  Changed: 4  Warnings: 0
+
+mysql> UPDATE WORKS
+    ->      SET salary=45000 WHERE company_name = "Infosys";
+Query OK, 1 row affected (0.03 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> UPDATE WORKS
+    ->      SET salary=40000 WHERE company_name = "Cisco";
+Query OK, 1 row affected (0.08 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> UPDATE WORKS
+    ->      SET salary=48000 WHERE company_name = "Mahindra";
+Query OK, 4 rows affected (0.03 sec)
+Rows matched: 4  Changed: 4  Warnings: 0
+
+mysql> UPDATE WORKS
+    ->      SET salary=42000 WHERE company_name = "TCS";
+Query OK, 2 rows affected (0.03 sec)
+Rows matched: 2  Changed: 2  Warnings: 0
+
+mysql> UPDATE WORKS
+    ->      SET salary=55000 WHERE company_name = "Tata";
+Query OK, 2 rows affected (0.03 sec)
+Rows matched: 2  Changed: 2  Warnings: 0
+
+mysql> UPDATE WORKS
+    ->      SET salary=52000 WHERE company_name = "Wipro";
+Query OK, 1 row affected (0.03 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> SELECT * FROM WORKS;
++------+--------------+--------+
+| e_id | company_name | salary |
++------+--------------+--------+
+|    1 | Accenture    |  50000 |
+|    2 | Infosys      |  45000 |
+|    3 | CISCO        |  40000 |
+|    4 | Mahindra     |  48000 |
+|    5 | Mahindra     |  48000 |
+|    6 | TCS          |  42000 |
+|    7 | TCS          |  42000 |
+|    8 | Tata         |  55000 |
+|    9 | Accenture    |  50000 |
+|   10 | Mahindra     |  48000 |
+|   11 | Mahindra     |  48000 |
+|   12 | Wipro        |  52000 |
+|   13 | Accenture    |  50000 |
+|   14 | Accenture    |  50000 |
+|   15 | Tata         |  55000 |
++------+--------------+--------+
+15 rows in set (0.00 sec)
+
+mysql> SELECT * FROM EMPLOYEE;
++------+----------------+----------------+-----------+
+| e_id | name           | street         | city      |
++------+----------------+----------------+-----------+
+|    1 | Aarav Sharma   | MG Road        | Delhi     |
+|    2 | Priya Verma    | Brigade Road   | Bangalore |
+|    3 | Rahul Mehta    | Park Street    | Kolkata   |
+|    4 | Sneha Iyer     | Anna Salai     | Mumbai    |
+|    5 | Vikram Reddy   | Banjara Hills  | Mumbai    |
+|    6 | Kriti Singh    | FC Road        | Pune      |
+|    7 | Rohan Das      | Hazratganj     | Pune      |
+|    8 | Ananya Joshi   | Law Garden     | Ahmedabad |
+|    9 | Siddharth Rao  | Gokulpeth Road | Delhi     |
+|   10 | Meera Nair     | Marine Drive   | Mumbai    |
+|   11 | Yash Patel     | Ellis Bridge   | Mumbai    |
+|   12 | Isha Kapoor    | Rajpur Road    | Dehradun  |
+|   13 | Aditya Roy     | Civil Lines    | Delhi     |
+|   14 | Tanvi Deshmukh | Nehru Place    | Delhi     |
+|   15 | Arjun Bhatt    | Ashram Road    | Ahmedabad |
++------+----------------+----------------+-----------+
+15 rows in set (0.00 sec)
+
+mysql> SELECT * FROM COMPANY;
++--------------+-----------+
+| company_name | city      |
++--------------+-----------+
+| Accenture    | Delhi     |
+| CISCO        | KOLKATA   |
+| Infosys      | Bangalore |
+| Mahindra     | Mumbai    |
+| Tata         | Ahmedabad |
+| TCS          | Pune      |
+| Wipro        | Dehradun  |
++--------------+-----------+
+7 rows in set (0.00 sec)
+
+mysql> SELECT * FROM MANAGES;
+Empty set (0.00 sec)
+
+mysql> INSERT INTO MANAGES
+    ->      VALUES
+    ->      (1, "Finance"),
+    ->      (2, "IT"),
+    ->      (3, "Sales"),
+    ->      (4, "Marketing"),
+    ->      (5, "IT"),
+    ->      (6, "Customer Support"),
+    ->      (7, "Sales"),
+    ->      (8, "Marketing"),
+    ->      (9, "IT"),
+    ->      (10, "Finance"),
+    ->      (11, "Finance"),
+    ->      (12, "IT"),
+    ->      (13, "Sales"),
+    ->      (14, "Customer Support"),
+    ->      (15, "IT");
+ERROR 1366 (HY000): Incorrect integer value: 'Finance' for column 'e_id' at row 1
+mysql> DESCRIBE MANAGES;
++-----------+-------------+------+-----+---------+-------+
+| Field     | Type        | Null | Key | Default | Extra |
++-----------+-------------+------+-----+---------+-------+
+| dept_name | varchar(20) | YES  |     | NULL    |       |
+| e_id      | int(11)     | YES  |     | NULL    |       |
++-----------+-------------+------+-----+---------+-------+
+2 rows in set (0.00 sec)
+
+mysql> INSERT INTO MANAGES(e_id, dept_name)
+    -> VALUES
+    ->      (1, "Finance"),
+    ->      (2, "IT"),
+    ->      (3, "Sales"),
+    ->      (4, "Marketing"),
+    ->      (5, "IT"),
+    ->      (6, "Customer Support"),
+    ->      (7, "Sales"),
+    ->      (8, "Marketing"),
+    ->      (9, "IT"),
+    ->      (10, "Finance"),
+    ->      (11, "Finance"),
+    ->      (12, "IT"),
+    ->      (13, "Sales"),
+    ->      (14, "Customer Support"),
+    ->      (15, "IT");
+Query OK, 15 rows affected (0.02 sec)
+Records: 15  Duplicates: 0  Warnings: 0
+
+mysql> CREATE VIEW acc_emp AS
+    ->     -> SELECT EMPLOYEE.*, WORKS.company_name, WORKS.salary
+    ->     -> FROM EMPLOYEE, WORKS WHERE EMPLOYEE.e_id = WORKS.e_id AND WORKS.company_name='Accenture';
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '-> SELECT EMPLOYEE.*, WORKS.company_name, WORKS.salary
+    -> FROM EMPLOYEE, WOR' at line 2
+mysql> CREATE VIEW acc_emp AS
+    ->      SELECT EMPLOYEE.*, WORKS.company_name, WORKS.salary
+    ->      FROM EMPLOYEE, WORKS WHERE EMPLOYEE.e_id = WORKS.e_id AND WORKS.company_name='Accenture';
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> SELECT * FROM acc_emp;
++------+----------------+----------------+-------+--------------+--------+
+| e_id | name           | street         | city  | company_name | salary |
++------+----------------+----------------+-------+--------------+--------+
+|    1 | Aarav Sharma   | MG Road        | Delhi | Accenture    |  50000 |
+|    9 | Siddharth Rao  | Gokulpeth Road | Delhi | Accenture    |  50000 |
+|   13 | Aditya Roy     | Civil Lines    | Delhi | Accenture    |  50000 |
+|   14 | Tanvi Deshmukh | Nehru Place    | Delhi | Accenture    |  50000 |
++------+----------------+----------------+-------+--------------+--------+
+4 rows in set (0.00 sec)
+
+mysql> UPDATE WORKS
+    -> SET salary=51000 WHERE e_id IN (1,13);
+Query OK, 2 rows affected (0.04 sec)
+Rows matched: 2  Changed: 2  Warnings: 0
+
+mysql> ALTER VIEW acc_emp AS
+    ->      SELECT EMPLOYEE.*, WORKS.company_name, WORKS.salary
+    ->      FROM EMPLOYEE, WORKS
+    ->      WHERE EMPLOYEE.e_id = WORKS.e_id AND WORKS.company_name='Accenture' 
+    ->      AND WORKS.salary>50000;
+Query OK, 0 rows affected (0.05 sec)
+
+mysql> SELECT * FROM acc_emp;
++------+--------------+-------------+-------+--------------+--------+
+| e_id | name         | street      | city  | company_name | salary |
++------+--------------+-------------+-------+--------------+--------+
+|    1 | Aarav Sharma | MG Road     | Delhi | Accenture    |  51000 |
+|   13 | Aditya Roy   | Civil Lines | Delhi | Accenture    |  51000 |
++------+--------------+-------------+-------+--------------+--------+
+2 rows in set (0.00 sec)
+
+mysql> RENAME VIEW acc_emp
+    -> TO ACC_ABOVE_50K;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'VIEW acc_emp
+TO ACC_ABOVE_50K' at line 1
+mysql> RENAME TABLE acc_emp TO ACC_ABOVE_50K;
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> SELECT * FROM ACC_ABOVE_50K;
++------+--------------+-------------+-------+--------------+--------+
+| e_id | name         | street      | city  | company_name | salary |
++------+--------------+-------------+-------+--------------+--------+
+|    1 | Aarav Sharma | MG Road     | Delhi | Accenture    |  51000 |
+|   13 | Aditya Roy   | Civil Lines | Delhi | Accenture    |  51000 |
++------+--------------+-------------+-------+--------------+--------+
+2 rows in set (0.00 sec)
+
+mysql> INSERT INTO ACC_ABOVE_50K
+    -> VALUES
+    -> (16, "Uday", "Street 1", "Delhi", "Accenture", 52000);
+ERROR 1394 (HY000): Can not insert into join view 'EMP.ACC_ABOVE_50K' without fields list
+mysql> INSERT INTO ACC_ABOVE_50K
+    -> (e_id, name, street, city, company_name, salary)
+    -> VALUES
+    -> (16, "Uday", "Street 1", "Delhi", "Accenture", 52000);
+ERROR 1393 (HY000): Can not modify more than one base table through a join view 'EMP.ACC_ABOVE_50K'
+mysql> INSERT INTO ACC_ABOVE_50K
+    -> (e_id, name, street, city)
+    -> VALUES
+    -> (16, "Uday", "Street 1", "Delhi");
+Query OK, 1 row affected (0.03 sec)
+
+mysql> SELECT * FROM ACC_ABOVE_50K;
++------+--------------+-------------+-------+--------------+--------+
+| e_id | name         | street      | city  | company_name | salary |
++------+--------------+-------------+-------+--------------+--------+
+|    1 | Aarav Sharma | MG Road     | Delhi | Accenture    |  51000 |
+|   13 | Aditya Roy   | Civil Lines | Delhi | Accenture    |  51000 |
++------+--------------+-------------+-------+--------------+--------+
+2 rows in set (0.00 sec)
+
+mysql> SELECT * FROM EMPLOYEE;
++------+----------------+----------------+-----------+
+| e_id | name           | street         | city      |
++------+----------------+----------------+-----------+
+|    1 | Aarav Sharma   | MG Road        | Delhi     |
+|    2 | Priya Verma    | Brigade Road   | Bangalore |
+|    3 | Rahul Mehta    | Park Street    | Kolkata   |
+|    4 | Sneha Iyer     | Anna Salai     | Mumbai    |
+|    5 | Vikram Reddy   | Banjara Hills  | Mumbai    |
+|    6 | Kriti Singh    | FC Road        | Pune      |
+|    7 | Rohan Das      | Hazratganj     | Pune      |
+|    8 | Ananya Joshi   | Law Garden     | Ahmedabad |
+|    9 | Siddharth Rao  | Gokulpeth Road | Delhi     |
+|   10 | Meera Nair     | Marine Drive   | Mumbai    |
+|   11 | Yash Patel     | Ellis Bridge   | Mumbai    |
+|   12 | Isha Kapoor    | Rajpur Road    | Dehradun  |
+|   13 | Aditya Roy     | Civil Lines    | Delhi     |
+|   14 | Tanvi Deshmukh | Nehru Place    | Delhi     |
+|   15 | Arjun Bhatt    | Ashram Road    | Ahmedabad |
+|   16 | Uday           | Street 1       | Delhi     |
++------+----------------+----------------+-----------+
+16 rows in set (0.00 sec)
+
+mysql> SELECT * FROM WORKS;
++------+--------------+--------+
+| e_id | company_name | salary |
++------+--------------+--------+
+|    1 | Accenture    |  51000 |
+|    2 | Infosys      |  45000 |
+|    3 | CISCO        |  40000 |
+|    4 | Mahindra     |  48000 |
+|    5 | Mahindra     |  48000 |
+|    6 | TCS          |  42000 |
+|    7 | TCS          |  42000 |
+|    8 | Tata         |  55000 |
+|    9 | Accenture    |  50000 |
+|   10 | Mahindra     |  48000 |
+|   11 | Mahindra     |  48000 |
+|   12 | Wipro        |  52000 |
+|   13 | Accenture    |  51000 |
+|   14 | Accenture    |  50000 |
+|   15 | Tata         |  55000 |
++------+--------------+--------+
+15 rows in set (0.00 sec)
+
+mysql> SELECT * FROM MANAGES;
++------------------+------+
+| dept_name        | e_id |
++------------------+------+
+| Finance          |    1 |
+| IT               |    2 |
+| Sales            |    3 |
+| Marketing        |    4 |
+| IT               |    5 |
+| Customer Support |    6 |
+| Sales            |    7 |
+| Marketing        |    8 |
+| IT               |    9 |
+| Finance          |   10 |
+| Finance          |   11 |
+| IT               |   12 |
+| Sales            |   13 |
+| Customer Support |   14 |
+| IT               |   15 |
++------------------+------+
+15 rows in set (0.00 sec)
+
+mysql> INSERT INTO WORKS
+    -> VALUES
+    -> (16, "Accenture", 52000);
+Query OK, 1 row affected (0.04 sec)
+
+mysql> INSERT INTO MANAGES
+    -> VALUES
+    -> (IT, 16);
+ERROR 1054 (42S22): Unknown column 'IT' in 'field list'
+mysql> INSERT INTO MANAGES VALUES ('IT', 16);
+Query OK, 1 row affected (0.02 sec)
+
+mysql> SELECT * FROM ACC_ABOVE_50K;
++------+--------------+-------------+-------+--------------+--------+
+| e_id | name         | street      | city  | company_name | salary |
++------+--------------+-------------+-------+--------------+--------+
+|    1 | Aarav Sharma | MG Road     | Delhi | Accenture    |  51000 |
+|   13 | Aditya Roy   | Civil Lines | Delhi | Accenture    |  51000 |
+|   16 | Uday         | Street 1    | Delhi | Accenture    |  52000 |
++------+--------------+-------------+-------+--------------+--------+
+3 rows in set (0.00 sec)
+
+mysql> CREATE INDEX emp_id_index
+    -> ON EMPLOYEE(e_id);
+Query OK, 0 rows affected (0.20 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> ALTER TABLE EMPLOYEE
+    -> DROP INDEX emp_id_index;
+Query OK, 0 rows affected (0.10 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> SELECT *
+    -> FROM EMPLOYEE, COMPANY;
++------+----------------+----------------+-----------+--------------+-----------+
+| e_id | name           | street         | city      | company_name | city      |
++------+----------------+----------------+-----------+--------------+-----------+
+|    1 | Aarav Sharma   | MG Road        | Delhi     | Accenture    | Delhi     |
+|    1 | Aarav Sharma   | MG Road        | Delhi     | CISCO        | KOLKATA   |
+|    1 | Aarav Sharma   | MG Road        | Delhi     | Infosys      | Bangalore |
+|    1 | Aarav Sharma   | MG Road        | Delhi     | Mahindra     | Mumbai    |
+|    1 | Aarav Sharma   | MG Road        | Delhi     | Tata         | Ahmedabad |
+|    1 | Aarav Sharma   | MG Road        | Delhi     | TCS          | Pune      |
+|    1 | Aarav Sharma   | MG Road        | Delhi     | Wipro        | Dehradun  |
+|    2 | Priya Verma    | Brigade Road   | Bangalore | Accenture    | Delhi     |
+|    2 | Priya Verma    | Brigade Road   | Bangalore | CISCO        | KOLKATA   |
+|    2 | Priya Verma    | Brigade Road   | Bangalore | Infosys      | Bangalore |
+|    2 | Priya Verma    | Brigade Road   | Bangalore | Mahindra     | Mumbai    |
+|    2 | Priya Verma    | Brigade Road   | Bangalore | Tata         | Ahmedabad |
+|    2 | Priya Verma    | Brigade Road   | Bangalore | TCS          | Pune      |
+|    2 | Priya Verma    | Brigade Road   | Bangalore | Wipro        | Dehradun  |
+|    3 | Rahul Mehta    | Park Street    | Kolkata   | Accenture    | Delhi     |
+|    3 | Rahul Mehta    | Park Street    | Kolkata   | CISCO        | KOLKATA   |
+|    3 | Rahul Mehta    | Park Street    | Kolkata   | Infosys      | Bangalore |
+|    3 | Rahul Mehta    | Park Street    | Kolkata   | Mahindra     | Mumbai    |
+|    3 | Rahul Mehta    | Park Street    | Kolkata   | Tata         | Ahmedabad |
+|    3 | Rahul Mehta    | Park Street    | Kolkata   | TCS          | Pune      |
+|    3 | Rahul Mehta    | Park Street    | Kolkata   | Wipro        | Dehradun  |
+|    4 | Sneha Iyer     | Anna Salai     | Mumbai    | Accenture    | Delhi     |
+|    4 | Sneha Iyer     | Anna Salai     | Mumbai    | CISCO        | KOLKATA   |
+|    4 | Sneha Iyer     | Anna Salai     | Mumbai    | Infosys      | Bangalore |
+|    4 | Sneha Iyer     | Anna Salai     | Mumbai    | Mahindra     | Mumbai    |
+|    4 | Sneha Iyer     | Anna Salai     | Mumbai    | Tata         | Ahmedabad |
+|    4 | Sneha Iyer     | Anna Salai     | Mumbai    | TCS          | Pune      |
+|    4 | Sneha Iyer     | Anna Salai     | Mumbai    | Wipro        | Dehradun  |
+|    5 | Vikram Reddy   | Banjara Hills  | Mumbai    | Accenture    | Delhi     |
+|    5 | Vikram Reddy   | Banjara Hills  | Mumbai    | CISCO        | KOLKATA   |
+|    5 | Vikram Reddy   | Banjara Hills  | Mumbai    | Infosys      | Bangalore |
+|    5 | Vikram Reddy   | Banjara Hills  | Mumbai    | Mahindra     | Mumbai    |
+|    5 | Vikram Reddy   | Banjara Hills  | Mumbai    | Tata         | Ahmedabad |
+|    5 | Vikram Reddy   | Banjara Hills  | Mumbai    | TCS          | Pune      |
+|    5 | Vikram Reddy   | Banjara Hills  | Mumbai    | Wipro        | Dehradun  |
+|    6 | Kriti Singh    | FC Road        | Pune      | Accenture    | Delhi     |
+|    6 | Kriti Singh    | FC Road        | Pune      | CISCO        | KOLKATA   |
+|    6 | Kriti Singh    | FC Road        | Pune      | Infosys      | Bangalore |
+|    6 | Kriti Singh    | FC Road        | Pune      | Mahindra     | Mumbai    |
+|    6 | Kriti Singh    | FC Road        | Pune      | Tata         | Ahmedabad |
+|    6 | Kriti Singh    | FC Road        | Pune      | TCS          | Pune      |
+|    6 | Kriti Singh    | FC Road        | Pune      | Wipro        | Dehradun  |
+|    7 | Rohan Das      | Hazratganj     | Pune      | Accenture    | Delhi     |
+|    7 | Rohan Das      | Hazratganj     | Pune      | CISCO        | KOLKATA   |
+|    7 | Rohan Das      | Hazratganj     | Pune      | Infosys      | Bangalore |
+|    7 | Rohan Das      | Hazratganj     | Pune      | Mahindra     | Mumbai    |
+|    7 | Rohan Das      | Hazratganj     | Pune      | Tata         | Ahmedabad |
+|    7 | Rohan Das      | Hazratganj     | Pune      | TCS          | Pune      |
+|    7 | Rohan Das      | Hazratganj     | Pune      | Wipro        | Dehradun  |
+|    8 | Ananya Joshi   | Law Garden     | Ahmedabad | Accenture    | Delhi     |
+|    8 | Ananya Joshi   | Law Garden     | Ahmedabad | CISCO        | KOLKATA   |
+|    8 | Ananya Joshi   | Law Garden     | Ahmedabad | Infosys      | Bangalore |
+|    8 | Ananya Joshi   | Law Garden     | Ahmedabad | Mahindra     | Mumbai    |
+|    8 | Ananya Joshi   | Law Garden     | Ahmedabad | Tata         | Ahmedabad |
+|    8 | Ananya Joshi   | Law Garden     | Ahmedabad | TCS          | Pune      |
+|    8 | Ananya Joshi   | Law Garden     | Ahmedabad | Wipro        | Dehradun  |
+|    9 | Siddharth Rao  | Gokulpeth Road | Delhi     | Accenture    | Delhi     |
+|    9 | Siddharth Rao  | Gokulpeth Road | Delhi     | CISCO        | KOLKATA   |
+|    9 | Siddharth Rao  | Gokulpeth Road | Delhi     | Infosys      | Bangalore |
+|    9 | Siddharth Rao  | Gokulpeth Road | Delhi     | Mahindra     | Mumbai    |
+|    9 | Siddharth Rao  | Gokulpeth Road | Delhi     | Tata         | Ahmedabad |
+|    9 | Siddharth Rao  | Gokulpeth Road | Delhi     | TCS          | Pune      |
+|    9 | Siddharth Rao  | Gokulpeth Road | Delhi     | Wipro        | Dehradun  |
+|   10 | Meera Nair     | Marine Drive   | Mumbai    | Accenture    | Delhi     |
+|   10 | Meera Nair     | Marine Drive   | Mumbai    | CISCO        | KOLKATA   |
+|   10 | Meera Nair     | Marine Drive   | Mumbai    | Infosys      | Bangalore |
+|   10 | Meera Nair     | Marine Drive   | Mumbai    | Mahindra     | Mumbai    |
+|   10 | Meera Nair     | Marine Drive   | Mumbai    | Tata         | Ahmedabad |
+|   10 | Meera Nair     | Marine Drive   | Mumbai    | TCS          | Pune      |
+|   10 | Meera Nair     | Marine Drive   | Mumbai    | Wipro        | Dehradun  |
+|   11 | Yash Patel     | Ellis Bridge   | Mumbai    | Accenture    | Delhi     |
+|   11 | Yash Patel     | Ellis Bridge   | Mumbai    | CISCO        | KOLKATA   |
+|   11 | Yash Patel     | Ellis Bridge   | Mumbai    | Infosys      | Bangalore |
+|   11 | Yash Patel     | Ellis Bridge   | Mumbai    | Mahindra     | Mumbai    |
+|   11 | Yash Patel     | Ellis Bridge   | Mumbai    | Tata         | Ahmedabad |
+|   11 | Yash Patel     | Ellis Bridge   | Mumbai    | TCS          | Pune      |
+|   11 | Yash Patel     | Ellis Bridge   | Mumbai    | Wipro        | Dehradun  |
+|   12 | Isha Kapoor    | Rajpur Road    | Dehradun  | Accenture    | Delhi     |
+|   12 | Isha Kapoor    | Rajpur Road    | Dehradun  | CISCO        | KOLKATA   |
+|   12 | Isha Kapoor    | Rajpur Road    | Dehradun  | Infosys      | Bangalore |
+|   12 | Isha Kapoor    | Rajpur Road    | Dehradun  | Mahindra     | Mumbai    |
+|   12 | Isha Kapoor    | Rajpur Road    | Dehradun  | Tata         | Ahmedabad |
+|   12 | Isha Kapoor    | Rajpur Road    | Dehradun  | TCS          | Pune      |
+|   12 | Isha Kapoor    | Rajpur Road    | Dehradun  | Wipro        | Dehradun  |
+|   13 | Aditya Roy     | Civil Lines    | Delhi     | Accenture    | Delhi     |
+|   13 | Aditya Roy     | Civil Lines    | Delhi     | CISCO        | KOLKATA   |
+|   13 | Aditya Roy     | Civil Lines    | Delhi     | Infosys      | Bangalore |
+|   13 | Aditya Roy     | Civil Lines    | Delhi     | Mahindra     | Mumbai    |
+|   13 | Aditya Roy     | Civil Lines    | Delhi     | Tata         | Ahmedabad |
+|   13 | Aditya Roy     | Civil Lines    | Delhi     | TCS          | Pune      |
+|   13 | Aditya Roy     | Civil Lines    | Delhi     | Wipro        | Dehradun  |
+|   14 | Tanvi Deshmukh | Nehru Place    | Delhi     | Accenture    | Delhi     |
+|   14 | Tanvi Deshmukh | Nehru Place    | Delhi     | CISCO        | KOLKATA   |
+|   14 | Tanvi Deshmukh | Nehru Place    | Delhi     | Infosys      | Bangalore |
+|   14 | Tanvi Deshmukh | Nehru Place    | Delhi     | Mahindra     | Mumbai    |
+|   14 | Tanvi Deshmukh | Nehru Place    | Delhi     | Tata         | Ahmedabad |
+|   14 | Tanvi Deshmukh | Nehru Place    | Delhi     | TCS          | Pune      |
+|   14 | Tanvi Deshmukh | Nehru Place    | Delhi     | Wipro        | Dehradun  |
+|   15 | Arjun Bhatt    | Ashram Road    | Ahmedabad | Accenture    | Delhi     |
+|   15 | Arjun Bhatt    | Ashram Road    | Ahmedabad | CISCO        | KOLKATA   |
+|   15 | Arjun Bhatt    | Ashram Road    | Ahmedabad | Infosys      | Bangalore |
+|   15 | Arjun Bhatt    | Ashram Road    | Ahmedabad | Mahindra     | Mumbai    |
+|   15 | Arjun Bhatt    | Ashram Road    | Ahmedabad | Tata         | Ahmedabad |
+|   15 | Arjun Bhatt    | Ashram Road    | Ahmedabad | TCS          | Pune      |
+|   15 | Arjun Bhatt    | Ashram Road    | Ahmedabad | Wipro        | Dehradun  |
+|   16 | Uday           | Street 1       | Delhi     | Accenture    | Delhi     |
+|   16 | Uday           | Street 1       | Delhi     | CISCO        | KOLKATA   |
+|   16 | Uday           | Street 1       | Delhi     | Infosys      | Bangalore |
+|   16 | Uday           | Street 1       | Delhi     | Mahindra     | Mumbai    |
+|   16 | Uday           | Street 1       | Delhi     | Tata         | Ahmedabad |
+|   16 | Uday           | Street 1       | Delhi     | TCS          | Pune      |
+|   16 | Uday           | Street 1       | Delhi     | Wipro        | Dehradun  |
++------+----------------+----------------+-----------+--------------+-----------+
+112 rows in set (0.00 sec)
+
+mysql> SELECT *
+    -> FROM EMPLOYEE, COMPANY, WORKS
+    -> \c;
+ERROR: 
+No query specified
+
+mysql> SELECT *
+    -> FROM EMPLOYEE, COMPANY
+    -> WHERE EMPLOYEE.e_id = WORKS.e_id AND WORKS.company_name = COMPANY.company_name;
+ERROR 1054 (42S22): Unknown column 'WORKS.e_id' in 'where clause'
+mysql> SELECT EMPLOYEE.*, COMPANY.*
+    -> FROM EMPLOYEE, COMPANY, WORKS
+    -> WHERE EMPLOYEE.e_id = WORKS.e_id AND WORKS.company_name = COMPANY.company_name;
++------+----------------+----------------+-----------+--------------+-----------+
+| e_id | name           | street         | city      | company_name | city      |
++------+----------------+----------------+-----------+--------------+-----------+
+|    1 | Aarav Sharma   | MG Road        | Delhi     | Accenture    | Delhi     |
+|    2 | Priya Verma    | Brigade Road   | Bangalore | Infosys      | Bangalore |
+|    3 | Rahul Mehta    | Park Street    | Kolkata   | CISCO        | KOLKATA   |
+|    4 | Sneha Iyer     | Anna Salai     | Mumbai    | Mahindra     | Mumbai    |
+|    5 | Vikram Reddy   | Banjara Hills  | Mumbai    | Mahindra     | Mumbai    |
+|    6 | Kriti Singh    | FC Road        | Pune      | TCS          | Pune      |
+|    7 | Rohan Das      | Hazratganj     | Pune      | TCS          | Pune      |
+|    8 | Ananya Joshi   | Law Garden     | Ahmedabad | Tata         | Ahmedabad |
+|    9 | Siddharth Rao  | Gokulpeth Road | Delhi     | Accenture    | Delhi     |
+|   10 | Meera Nair     | Marine Drive   | Mumbai    | Mahindra     | Mumbai    |
+|   11 | Yash Patel     | Ellis Bridge   | Mumbai    | Mahindra     | Mumbai    |
+|   12 | Isha Kapoor    | Rajpur Road    | Dehradun  | Wipro        | Dehradun  |
+|   13 | Aditya Roy     | Civil Lines    | Delhi     | Accenture    | Delhi     |
+|   14 | Tanvi Deshmukh | Nehru Place    | Delhi     | Accenture    | Delhi     |
+|   15 | Arjun Bhatt    | Ashram Road    | Ahmedabad | Tata         | Ahmedabad |
+|   16 | Uday           | Street 1       | Delhi     | Accenture    | Delhi     |
++------+----------------+----------------+-----------+--------------+-----------+
+16 rows in set (0.00 sec)
+
+mysql> DELETE FROM MANAGES;
+Query OK, 16 rows affected (0.03 sec)
+
+mysql> INSERT INTO MANAGES
+    -> VALUES
+    -> (1, "IT),
+    "> \c
+    "> ;
+    "> ^C
+mysql> INSERT INTO MANAGES
+    -> VALUES
+    -> (1, "IT"),
+    -> (2, "Marketing"),
+    -> (5, "Finance"),
+    -> (3, "IT"),
+    -> (7, "Customer Support"),
+    -> (12, "Sales")
+    -> (15, "Marketing");
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '(15, "Marketing")' at line 9
+mysql> INSERT INTO MANAGES
+    -> VALUES
+    -> (1, "IT"),
+    -> (2, "Marketing"),
+    -> (3, "IT"),
+    -> (5, "Finance"),
+    -> (7, "Customer Support"),
+    -> (12, "Sales"),
+    -> (15, "Marketing");
+ERROR 1366 (HY000): Incorrect integer value: 'IT' for column 'e_id' at row 1
+mysql> INSERT INTO MANAGES(e_id, dept_name)
+    -> VALUES
+    ->      (1, "IT"),
+    ->      (2, "Marketing"),
+    ->      (3, "IT"),
+    ->      (5, "Finance"),
+    ->      (7, "Customer Support"),
+    ->      (12, "Sales"),
+    ->      (15, "Marketing");
+Query OK, 7 rows affected (0.02 sec)
+Records: 7  Duplicates: 0  Warnings: 0
+
+mysql> SELECT EMPLOYEE.*, COMPANY.*
+    -> FROM EMPLOYEE, COMPANY, WORKS
+    -> WHERE EMPLOYEE.e_id = WORKS.e_id AND WORKS.company_name = COMPANY.company_name;
++------+----------------+----------------+-----------+--------------+-----------+
+| e_id | name           | street         | city      | company_name | city      |
++------+----------------+----------------+-----------+--------------+-----------+
+|    1 | Aarav Sharma   | MG Road        | Delhi     | Accenture    | Delhi     |
+|    2 | Priya Verma    | Brigade Road   | Bangalore | Infosys      | Bangalore |
+|    3 | Rahul Mehta    | Park Street    | Kolkata   | CISCO        | KOLKATA   |
+|    4 | Sneha Iyer     | Anna Salai     | Mumbai    | Mahindra     | Mumbai    |
+|    5 | Vikram Reddy   | Banjara Hills  | Mumbai    | Mahindra     | Mumbai    |
+|    6 | Kriti Singh    | FC Road        | Pune      | TCS          | Pune      |
+|    7 | Rohan Das      | Hazratganj     | Pune      | TCS          | Pune      |
+|    8 | Ananya Joshi   | Law Garden     | Ahmedabad | Tata         | Ahmedabad |
+|    9 | Siddharth Rao  | Gokulpeth Road | Delhi     | Accenture    | Delhi     |
+|   10 | Meera Nair     | Marine Drive   | Mumbai    | Mahindra     | Mumbai    |
+|   11 | Yash Patel     | Ellis Bridge   | Mumbai    | Mahindra     | Mumbai    |
+|   12 | Isha Kapoor    | Rajpur Road    | Dehradun  | Wipro        | Dehradun  |
+|   13 | Aditya Roy     | Civil Lines    | Delhi     | Accenture    | Delhi     |
+|   14 | Tanvi Deshmukh | Nehru Place    | Delhi     | Accenture    | Delhi     |
+|   15 | Arjun Bhatt    | Ashram Road    | Ahmedabad | Tata         | Ahmedabad |
+|   16 | Uday           | Street 1       | Delhi     | Accenture    | Delhi     |
++------+----------------+----------------+-----------+--------------+-----------+
+16 rows in set (0.00 sec)
+
+mysql> SELECT e_id, name
+    -> FROM EMPLOYEE;
++------+----------------+
+| e_id | name           |
++------+----------------+
+|    1 | Aarav Sharma   |
+|    2 | Priya Verma    |
+|    3 | Rahul Mehta    |
+|    4 | Sneha Iyer     |
+|    5 | Vikram Reddy   |
+|    6 | Kriti Singh    |
+|    7 | Rohan Das      |
+|    8 | Ananya Joshi   |
+|    9 | Siddharth Rao  |
+|   10 | Meera Nair     |
+|   11 | Yash Patel     |
+|   12 | Isha Kapoor    |
+|   13 | Aditya Roy     |
+|   14 | Tanvi Deshmukh |
+|   15 | Arjun Bhatt    |
+|   16 | Uday           |
++------+----------------+
+16 rows in set (0.00 sec)
+
+mysql> SELECT EMPLOYEE.*
+    -> , MANAGES.dept_name
+    -> FROM EMPLOYEE, MANAGES
+    -> WHERE EMPLOYEE.e_id = MANAGES.e_id;
++------+--------------+---------------+-----------+------------------+
+| e_id | name         | street        | city      | dept_name        |
++------+--------------+---------------+-----------+------------------+
+|    1 | Aarav Sharma | MG Road       | Delhi     | IT               |
+|    2 | Priya Verma  | Brigade Road  | Bangalore | Marketing        |
+|    3 | Rahul Mehta  | Park Street   | Kolkata   | IT               |
+|    5 | Vikram Reddy | Banjara Hills | Mumbai    | Finance          |
+|    7 | Rohan Das    | Hazratganj    | Pune      | Customer Support |
+|   12 | Isha Kapoor  | Rajpur Road   | Dehradun  | Sales            |
+|   15 | Arjun Bhatt  | Ashram Road   | Ahmedabad | Marketing        |
++------+--------------+---------------+-----------+------------------+
+7 rows in set (0.00 sec)
+
+mysql> CREATE VIEW MANAGEMENT AS
+    -> SELECT EMPLOYEE.*, MANAGES.dept_name
+    -> FROM EMPLOYEE, MANAGES
+    -> WHERE EMPLOYEE.e_id = MANAGES.e_id;
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> SELECT * FROM MANAGEMENT;
++------+--------------+---------------+-----------+------------------+
+| e_id | name         | street        | city      | dept_name        |
++------+--------------+---------------+-----------+------------------+
+|    1 | Aarav Sharma | MG Road       | Delhi     | IT               |
+|    2 | Priya Verma  | Brigade Road  | Bangalore | Marketing        |
+|    3 | Rahul Mehta  | Park Street   | Kolkata   | IT               |
+|    5 | Vikram Reddy | Banjara Hills | Mumbai    | Finance          |
+|    7 | Rohan Das    | Hazratganj    | Pune      | Customer Support |
+|   12 | Isha Kapoor  | Rajpur Road   | Dehradun  | Sales            |
+|   15 | Arjun Bhatt  | Ashram Road   | Ahmedabad | Marketing        |
++------+--------------+---------------+-----------+------------------+
+7 rows in set (0.00 sec)
+
+mysql> 
