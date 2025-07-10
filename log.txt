@@ -1,0 +1,744 @@
+mysql> SELECT DISTINCT city, company_name
+    -> FROM COMPANY;
++-----------+--------------+
+| city      | company_name |
++-----------+--------------+
+| Delhi     | Accenture    |
+| Mumbai    | Accenture    |
+| KOLKATA   | CISCO        |
+| Bangalore | Infosys      |
+| Chennai   | Mahindra     |
+| Mumbai    | Mahindra     |
+| Ahmedabad | Tata         |
+| Pune      | Tata         |
+| Pune      | TCS          |
+| Dehradun  | Wipro        |
++-----------+--------------+
+10 rows in set (0.00 sec)
+
+mysql> SELECT DISTINCT city FROM COMPANY
+    -> WHERE company_name="Tata";
++-----------+
+| city      |
++-----------+
+| Ahmedabad |
+| Pune      |
++-----------+
+2 rows in set (0.02 sec)
+
+mysql> SELECT DISTINCT city
+    -> FROM COMPANY;
++-----------+
+| city      |
++-----------+
+| Delhi     |
+| Mumbai    |
+| KOLKATA   |
+| Bangalore |
+| Chennai   |
+| Ahmedabad |
+| Pune      |
+| Dehradun  |
++-----------+
+8 rows in set (0.00 sec)
+
+mysql> UPDATE EMPLOYEE
+    -> SET e_id=12345
+    -> \c
+mysql> INSERT INTO EMPLOYEE
+    -> VALUES
+    -> (12345, "Sushant", "Delhi Cantt", "Delhi");
+Query OK, 1 row affected (0.03 sec)
+
+mysql> SELECT * FROM EMPLOYEE;
++-------+----------------+----------------+-----------+
+| e_id  | name           | street         | city      |
++-------+----------------+----------------+-----------+
+|     1 | Aarav Sharma   | MG Road        | Delhi     |
+|     2 | Priya Verma    | Brigade Road   | Bangalore |
+|     3 | Rahul Mehta    | Park Street    | Kolkata   |
+|     4 | Sneha Iyer     | Anna Salai     | Mumbai    |
+|     5 | Vikram Reddy   | Banjara Hills  | Mumbai    |
+|     6 | Kriti Singh    | FC Road        | Pune      |
+|     7 | Rohan Das      | Hazratganj     | Pune      |
+|     8 | Ananya Joshi   | Law Garden     | Ahmedabad |
+|     9 | Siddharth Rao  | Gokulpeth Road | Delhi     |
+|    10 | Meera Nair     | Marine Drive   | Mumbai    |
+|    11 | Yash Patel     | Ellis Bridge   | Mumbai    |
+|    12 | Isha Kapoor    | Rajpur Road    | Dehradun  |
+|    13 | Aditya Roy     | Civil Lines    | Delhi     |
+|    14 | Tanvi Deshmukh | Nehru Place    | Delhi     |
+|    15 | Arjun Bhatt    | Ashram Road    | Ahmedabad |
+|    16 | Uday           | Street 1       | Delhi     |
+| 12345 | Sushant        | Delhi Cantt    | Delhi     |
++-------+----------------+----------------+-----------+
+17 rows in set (0.00 sec)
+
+mysql> UPDATE EMPLOYEE
+    -> SET street="Cantt. Area", city="New Delhi"
+    -> WHERE e_id=12345;
+Query OK, 1 row affected (0.03 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> SELECT * FROM EMPLOYEE;
++-------+----------------+----------------+-----------+
+| e_id  | name           | street         | city      |
++-------+----------------+----------------+-----------+
+|     1 | Aarav Sharma   | MG Road        | Delhi     |
+|     2 | Priya Verma    | Brigade Road   | Bangalore |
+|     3 | Rahul Mehta    | Park Street    | Kolkata   |
+|     4 | Sneha Iyer     | Anna Salai     | Mumbai    |
+|     5 | Vikram Reddy   | Banjara Hills  | Mumbai    |
+|     6 | Kriti Singh    | FC Road        | Pune      |
+|     7 | Rohan Das      | Hazratganj     | Pune      |
+|     8 | Ananya Joshi   | Law Garden     | Ahmedabad |
+|     9 | Siddharth Rao  | Gokulpeth Road | Delhi     |
+|    10 | Meera Nair     | Marine Drive   | Mumbai    |
+|    11 | Yash Patel     | Ellis Bridge   | Mumbai    |
+|    12 | Isha Kapoor    | Rajpur Road    | Dehradun  |
+|    13 | Aditya Roy     | Civil Lines    | Delhi     |
+|    14 | Tanvi Deshmukh | Nehru Place    | Delhi     |
+|    15 | Arjun Bhatt    | Ashram Road    | Ahmedabad |
+|    16 | Uday           | Street 1       | Delhi     |
+| 12345 | Sushant        | Cantt. Area    | New Delhi |
++-------+----------------+----------------+-----------+
+17 rows in set (0.00 sec)
+
+mysql> INSERT INTO COMPANY
+    -> VALUES
+    -> ("Amazon", "Mumbai");
+Query OK, 1 row affected (0.03 sec)
+
+mysql> SELECT * FROM WORKS;
++------+--------------+--------+
+| e_id | company_name | salary |
++------+--------------+--------+
+|    1 | Accenture    |  51000 |
+|    2 | Infosys      |  45000 |
+|    3 | CISCO        |  40000 |
+|    4 | Mahindra     |  48000 |
+|    5 | Mahindra     |  48000 |
+|    6 | TCS          |  42000 |
+|    7 | TCS          |  42000 |
+|    8 | Tata         |  55000 |
+|    9 | Accenture    |  50000 |
+|   10 | Mahindra     |  48000 |
+|   11 | Mahindra     |  48000 |
+|   12 | Wipro        |  52000 |
+|   13 | Accenture    |  51000 |
+|   14 | Accenture    |  50000 |
+|   15 | Tata         |  55000 |
+|   16 | Accenture    |  52000 |
++------+--------------+--------+
+16 rows in set (0.00 sec)
+
+mysql> INSERT INTO WORKS
+    -> VALUES
+    -> (12345, "Amazon", 60000);
+Query OK, 1 row affected (0.03 sec)
+
+mysql> UPDATE WORKS
+    -> SET company_name="Amazon", salary=60000
+    -> WHERE e_id IN (9,14);
+Query OK, 2 rows affected (0.02 sec)
+Rows matched: 2  Changed: 2  Warnings: 0
+
+mysql> UPDATE WORKS
+    -> SET salary = salary + 10000
+    -> WHERE company_name = "Amazon";
+Query OK, 3 rows affected (0.02 sec)
+Rows matched: 3  Changed: 3  Warnings: 0
+
+mysql> SELECT * FROM WORKS;
++-------+--------------+--------+
+| e_id  | company_name | salary |
++-------+--------------+--------+
+|     1 | Accenture    |  51000 |
+|     2 | Infosys      |  45000 |
+|     3 | CISCO        |  40000 |
+|     4 | Mahindra     |  48000 |
+|     5 | Mahindra     |  48000 |
+|     6 | TCS          |  42000 |
+|     7 | TCS          |  42000 |
+|     8 | Tata         |  55000 |
+|     9 | Amazon       |  70000 |
+|    10 | Mahindra     |  48000 |
+|    11 | Mahindra     |  48000 |
+|    12 | Wipro        |  52000 |
+|    13 | Accenture    |  51000 |
+|    14 | Amazon       |  70000 |
+|    15 | Tata         |  55000 |
+|    16 | Accenture    |  52000 |
+| 12345 | Amazon       |  70000 |
++-------+--------------+--------+
+17 rows in set (0.00 sec)
+
+mysql> DELETE FROM WORKS, MANAGES, EMPLOYEE
+    -> \c
+mysql> DELETE FROM WORKS
+    -> \c
+mysql> DELETE FROM EMPLOYEE
+    -> WHERE EMPLOYEE.e_id = WORKS.e_id
+    -> AND WORKS.salary>=20000
+    -> AND WORKS.salary<50000;
+ERROR 1054 (42S22): Unknown column 'WORKS.e_id' in 'where clause'
+mysql> DELETE FROM EMPLOYEE, WORKS
+    -> WHERE EMPLOYEE.e_id = WORKS.e_id
+    -> AND WORKS.salary>=20000
+    -> AND WORKS.salary<50000;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'WHERE EMPLOYEE.e_id = WORKS.e_id
+AND WORKS.salary>=20000
+AND WORKS.salary<50000' at line 2
+mysql> DELETE FROM EMPLOYEE, WORKS
+    -> WHERE EMPLOYEE.e_id=12345;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'WHERE EMPLOYEE.e_id=12345' at line 2
+mysql> DELETE FROM EMPLOYEE;
+Query OK, 17 rows affected (0.03 sec)
+
+mysql> ROLLBACK;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> SELECT * FROM EMPLOYEE;
+Empty set (0.00 sec)
+
+mysql> INSERT INTO EMPLOYEE (e_id, name, street, city) VALUES
+    ->           (1, 'Aarav Sharma', 'MG Road', 'Delhi'),
+    ->           (2, 'Priya Verma', 'Brigade Road', 'Bangalore'),
+    ->           (3, 'Rahul Mehta', 'Park Street', 'Kolkata'),
+    ->           (4, 'Sneha Iyer', 'Anna Salai', 'Chennai'),
+    ->           (5, 'Vikram Reddy', 'Banjara Hills', 'Hyderabad'),
+    ->           (6, 'Kriti Singh', 'FC Road', 'Pune'),
+    ->           (7, 'Rohan Das', 'Hazratganj', 'Lucknow'),
+    ->           (8, 'Ananya Joshi', 'Law Garden', 'Ahmedabad'),
+    ->           (9, 'Siddharth Rao', 'Gokulpeth Road', 'Nagpur'),
+    ->           (10, 'Meera Nair', 'Marine Drive', 'Mumbai'),
+    ->           (11, 'Yash Patel', 'Ellis Bridge', 'Surat'),
+    ->           (12, 'Isha Kapoor', 'Rajpur Road', 'Dehradun'),
+    ->           (13, 'Aditya Roy', 'Civil Lines', 'Kanpur'),
+    ->           (14, 'Tanvi Deshmukh', 'Nehru Place', 'Delhi'),
+    ->           (15, 'Arjun Bhatt', 'Ashram Road', 'Ahmedabad');
+Query OK, 15 rows affected (0.04 sec)
+Records: 15  Duplicates: 0  Warnings: 0
+
+mysql> ^C
+mysql> DELETE FROM EMPLOYEE
+    -> WHERE EMPLOYEE.e_id IN
+    -> (SELECT e_id FROM WORKS
+    -> WHERE salary BETWEEN 20000 AND 50000);
+Query OK, 8 rows affected (0.29 sec)
+
+mysql> SELECT * FROM EMPLOYEE;
++-------+----------------+----------------+-----------+
+| e_id  | name           | street         | city      |
++-------+----------------+----------------+-----------+
+|     1 | Aarav Sharma   | MG Road        | Delhi     |
+|     8 | Ananya Joshi   | Law Garden     | Ahmedabad |
+|     9 | Siddharth Rao  | Gokulpeth Road | Nagpur    |
+|    12 | Isha Kapoor    | Rajpur Road    | Dehradun  |
+|    13 | Aditya Roy     | Civil Lines    | Kanpur    |
+|    14 | Tanvi Deshmukh | Nehru Place    | Delhi     |
+|    15 | Arjun Bhatt    | Ashram Road    | Ahmedabad |
+| 12345 | Sushant        | Cantt. Area    | Agra      |
++-------+----------------+----------------+-----------+
+8 rows in set (0.00 sec)
+
+mysql> SELECT * FROM WORKS;
++-------+--------------+--------+
+| e_id  | company_name | salary |
++-------+--------------+--------+
+|     1 | Accenture    |  51000 |
+|     2 | Infosys      |  45000 |
+|     3 | CISCO        |  40000 |
+|     4 | Mahindra     |  48000 |
+|     5 | Mahindra     |  48000 |
+|     6 | TCS          |  42000 |
+|     7 | TCS          |  42000 |
+|     8 | Tata         |  55000 |
+|     9 | Amazon       |  70000 |
+|    10 | Mahindra     |  48000 |
+|    11 | Mahindra     |  48000 |
+|    12 | Wipro        |  52000 |
+|    13 | Accenture    |  51000 |
+|    14 | Amazon       |  70000 |
+|    15 | Tata         |  55000 |
+| 12345 | Amazon       |  70000 |
++-------+--------------+--------+
+16 rows in set (0.00 sec)
+
+mysql> DELETE FROM WORKS
+    -> WHERE WORKS.e_id
+    -> NOT IN
+    -> (SELECT e_id FROM EMPLOYEE);
+Query OK, 8 rows affected (0.03 sec)
+
+mysql> DELETE FROM MANAGES
+    -> WHERE MANAGES.e_id
+    -> NOT IN
+    -> (SELECT e_id FROM EMPLOYEE);
+Query OK, 4 rows affected (0.04 sec)
+
+mysql> SELECT * FROM COMPANY;
++--------------+-----------+
+| company_name | city      |
++--------------+-----------+
+| Accenture    | Delhi     |
+| Accenture    | Mumbai    |
+| Amazon       | Mumbai    |
+| CISCO        | KOLKATA   |
+| Infosys      | Bangalore |
+| Mahindra     | Chennai   |
+| Mahindra     | Mumbai    |
+| Tata         | Ahmedabad |
+| Tata         | Pune      |
+| TCS          | Pune      |
+| Wipro        | Dehradun  |
++--------------+-----------+
+11 rows in set (0.01 sec)
+
+mysql> SELECT * FROM COMPANY
+    -> WHERE company_name LIKE "P%";
+Empty set (0.00 sec)
+
+mysql> SELECT * FROM COMPANY
+    -> WHERE city LIKE "P%";
++--------------+------+
+| company_name | city |
++--------------+------+
+| Tata         | Pune |
+| TCS          | Pune |
++--------------+------+
+2 rows in set (0.01 sec)
+
+mysql> SELECT * FROM WORKS;
++-------+--------------+--------+
+| e_id  | company_name | salary |
++-------+--------------+--------+
+|     1 | Accenture    |  51000 |
+|     8 | Tata         |  55000 |
+|     9 | Amazon       |  70000 |
+|    12 | Wipro        |  52000 |
+|    13 | Accenture    |  51000 |
+|    14 | Amazon       |  70000 |
+|    15 | Tata         |  55000 |
+| 12345 | Amazon       |  70000 |
++-------+--------------+--------+
+8 rows in set (0.00 sec)
+
+mysql> INSERT INTO COMPANY
+    -> VALUES
+    -> ("Flipkart", "Noida"),
+    -> ("Google", "Bangalore");
+Query OK, 2 rows affected (0.03 sec)
+Records: 2  Duplicates: 0  Warnings: 0
+
+mysql> INSERT INTO EMPLOYEE
+    -> VALUES
+    -> (16, "Uday", "XYZ Street", "Noida"),
+    -> (17, "Yakein", "ABC Street", "Bangalore"),
+    -> (18, "Sushant", "Street 1", "Bangalore"),
+    -> (19, "Rohit", "Street 2
+    "> ", "Noida");
+Query OK, 4 rows affected (0.04 sec)
+Records: 4  Duplicates: 0  Warnings: 0
+
+mysql> SELECT * FROM EMPLOYEE;
++-------+----------------+----------------+-----------+
+| e_id  | name           | street         | city      |
++-------+----------------+----------------+-----------+
+|     1 | Aarav Sharma   | MG Road        | Delhi     |
+|     8 | Ananya Joshi   | Law Garden     | Ahmedabad |
+|     9 | Siddharth Rao  | Gokulpeth Road | Nagpur    |
+|    12 | Isha Kapoor    | Rajpur Road    | Dehradun  |
+|    13 | Aditya Roy     | Civil Lines    | Kanpur    |
+|    14 | Tanvi Deshmukh | Nehru Place    | Delhi     |
+|    15 | Arjun Bhatt    | Ashram Road    | Ahmedabad |
+|    16 | Uday           | XYZ Street     | Noida     |
+|    17 | Yakein         | ABC Street     | Bangalore |
+|    18 | Sushant        | Street 1       | Bangalore |
+|    19 | Rohit          | Street 2
+      | Noida     |
+| 12345 | Sushant        | Cantt. Area    | Agra      |
++-------+----------------+----------------+-----------+
+12 rows in set (0.00 sec)
+
+mysql> UPDATE EMPLOYEE
+    -> SET street="Street 1B"
+    -> WHERE e_id=19;
+Query OK, 1 row affected (0.03 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> SELECT * FROM EMPLOYEE;
++-------+----------------+----------------+-----------+
+| e_id  | name           | street         | city      |
++-------+----------------+----------------+-----------+
+|     1 | Aarav Sharma   | MG Road        | Delhi     |
+|     8 | Ananya Joshi   | Law Garden     | Ahmedabad |
+|     9 | Siddharth Rao  | Gokulpeth Road | Nagpur    |
+|    12 | Isha Kapoor    | Rajpur Road    | Dehradun  |
+|    13 | Aditya Roy     | Civil Lines    | Kanpur    |
+|    14 | Tanvi Deshmukh | Nehru Place    | Delhi     |
+|    15 | Arjun Bhatt    | Ashram Road    | Ahmedabad |
+|    16 | Uday           | XYZ Street     | Noida     |
+|    17 | Yakein         | ABC Street     | Bangalore |
+|    18 | Sushant        | Street 1       | Bangalore |
+|    19 | Rohit          | Street 1B      | Noida     |
+| 12345 | Sushant        | Cantt. Area    | Agra      |
++-------+----------------+----------------+-----------+
+12 rows in set (0.00 sec)
+
+mysql> INSERT INTO WORKS
+    -> VALUES
+    -> (16, "Flipkart", 60000),
+    -> (17, "Google", 70000),
+    -> (18, "Google", 70000),
+    -> (19, "Flipkart", 60000);
+Query OK, 4 rows affected (0.04 sec)
+Records: 4  Duplicates: 0  Warnings: 0
+
+mysql> SELECT EMPLOYEE.*, WORKS.company_name
+    -> FROM EMPLOYEE, WORKS
+    -> WHERE EMPLOYEE.e_id = WORKS.e_id
+    -> AND WORKS.company_name IN ("Flipkart", "Google");
++------+---------+------------+-----------+--------------+
+| e_id | name    | street     | city      | company_name |
++------+---------+------------+-----------+--------------+
+|   16 | Uday    | XYZ Street | Noida     | Flipkart     |
+|   17 | Yakein  | ABC Street | Bangalore | Google       |
+|   18 | Sushant | Street 1   | Bangalore | Google       |
+|   19 | Rohit   | Street 1B  | Noida     | Flipkart     |
++------+---------+------------+-----------+--------------+
+4 rows in set (0.00 sec)
+
+mysql> UPDATE COMPANY
+    -> SET company_name="ABC Corp"
+    -> WHERE company_name="TCS";
+Query OK, 1 row affected (0.05 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> UPDATE COMPANY
+    -> SET company_name="ABC Corp"
+    -> WHERE company_name="Wipro";
+Query OK, 1 row affected (0.02 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> UPDATE COMPANY
+    -> SET company_name="ABC Corp"
+    -> WHERE company_name="Infosys";
+Query OK, 1 row affected (0.03 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> UPDATE WORKS
+    -> SET company_name="ABC Corp"
+    -> WHERE company_name IN ("Infosys", "Wipro", "TCS");
+Query OK, 1 row affected (0.04 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> SELECT * FROM WORKS;
++-------+--------------+--------+
+| e_id  | company_name | salary |
++-------+--------------+--------+
+|     1 | Accenture    |  51000 |
+|     8 | Tata         |  55000 |
+|     9 | Amazon       |  70000 |
+|    12 | ABC Corp     |  52000 |
+|    13 | Accenture    |  51000 |
+|    14 | Amazon       |  70000 |
+|    15 | Tata         |  55000 |
+| 12345 | Amazon       |  70000 |
+|    16 | Flipkart     |  60000 |
+|    17 | Google       |  70000 |
+|    18 | Google       |  70000 |
+|    19 | Flipkart     |  60000 |
++-------+--------------+--------+
+12 rows in set (0.00 sec)
+
+mysql> INSERT INTO EMPLOYEE
+    -> VALUES
+    -> \c;
+ERROR: 
+No query specified
+
+mysql> INSERT INTO EMPLOYEE
+    -> VALUES
+    -> (2, "Gaurav", "Street 2C", "Pune"),
+    -> (3, "Abhishek", "Street 3E", "Pune);
+    "> \c
+    "> "\c
+mysql> INSERT INTO EMPLOYEE
+    -> VALUES
+    -> (2, "Gaurav", "Street 2C", "Pune"),
+    -> (3, "Abhishek", "Street 3E", "Pune");
+Query OK, 2 rows affected (0.04 sec)
+Records: 2  Duplicates: 0  Warnings: 0
+
+mysql> INSERT INTO WORKS
+    -> VALUES
+    -> (2, "ABC Corp", 45000),
+    -> (3, "ABC Corp", 58000);
+Query OK, 2 rows affected (0.02 sec)
+Records: 2  Duplicates: 0  Warnings: 0
+
+mysql> SELECT * FROM WORKS
+    -> WHERE company_name="ABC Corp";
++------+--------------+--------+
+| e_id | company_name | salary |
++------+--------------+--------+
+|   12 | ABC Corp     |  52000 |
+|    2 | ABC Corp     |  45000 |
+|    3 | ABC Corp     |  58000 |
++------+--------------+--------+
+3 rows in set (0.00 sec)
+
+mysql> SELECT AVG(salary) FROM WORKS
+    -> WHERE company_name="ABC Corp";
++-------------+
+| AVG(salary) |
++-------------+
+|  51666.6667 |
++-------------+
+1 row in set (0.00 sec)
+
+mysql> SELECT COUNT(e_id)
+    -> FROM WORKS
+    -> WHERE company_name="Amazon";
++-------------+
+| COUNT(e_id) |
++-------------+
+|           3 |
++-------------+
+1 row in set (0.00 sec)
+
+mysql> SELECT COUNT("Amazon")
+    -> FROM WORKS
+    -> WHERE company_name="Amazon";
++-----------------+
+| COUNT("Amazon") |
++-----------------+
+|               3 |
++-----------------+
+1 row in set (0.00 sec)
+
+mysql> SELECT * FROM WORKS;
++-------+--------------+--------+
+| e_id  | company_name | salary |
++-------+--------------+--------+
+|     1 | Accenture    |  51000 |
+|     8 | Tata         |  55000 |
+|     9 | Amazon       |  70000 |
+|    12 | ABC Corp     |  52000 |
+|    13 | Accenture    |  51000 |
+|    14 | Amazon       |  70000 |
+|    15 | Tata         |  55000 |
+| 12345 | Amazon       |  70000 |
+|    16 | Flipkart     |  60000 |
+|    17 | Google       |  70000 |
+|    18 | Google       |  70000 |
+|    19 | Flipkart     |  60000 |
+|     2 | ABC Corp     |  45000 |
+|     3 | ABC Corp     |  58000 |
++-------+--------------+--------+
+14 rows in set (0.00 sec)
+
+mysql> UPDATE WORKS
+    -> SET company_name="Google"
+    -> WHERE e_id IN (12,19);
+Query OK, 2 rows affected (0.02 sec)
+Rows matched: 2  Changed: 2  Warnings: 0
+
+mysql> SELECT * FROM WORKS
+    -> WHERE company_name="Google"
+    -> ;
++------+--------------+--------+
+| e_id | company_name | salary |
++------+--------------+--------+
+|   12 | Google       |  52000 |
+|   17 | Google       |  70000 |
+|   18 | Google       |  70000 |
+|   19 | Google       |  60000 |
++------+--------------+--------+
+4 rows in set (0.00 sec)
+
+mysql> SELECT MIN(salary), MAX(salary)
+    -> FROM WORKS
+    -> WHERE company_name="Google";
++-------------+-------------+
+| MIN(salary) | MAX(salary) |
++-------------+-------------+
+|       52000 |       70000 |
++-------------+-------------+
+1 row in set (0.00 sec)
+
+mysql> SELECT * FROM WORKS
+    -> WHERE company_name="ABC Corp";
++------+--------------+--------+
+| e_id | company_name | salary |
++------+--------------+--------+
+|    2 | ABC Corp     |  45000 |
+|    3 | ABC Corp     |  58000 |
++------+--------------+--------+
+2 rows in set (0.00 sec)
+
+mysql> SELECT SUM(salary) AS TOTAL_SALARY
+    -> FROM WORKS
+    -> WHERE company_name="ABC Corp";
++--------------+
+| TOTAL_SALARY |
++--------------+
+|       103000 |
++--------------+
+1 row in set (0.00 sec)
+
+mysql> INSERT INTO WORKS(e_id)
+    -> VALUES
+    -> (20);
+Query OK, 1 row affected (0.06 sec)
+
+mysql> SELECT * FROM WORKS;
++-------+--------------+--------+
+| e_id  | company_name | salary |
++-------+--------------+--------+
+|     1 | Accenture    |  51000 |
+|     8 | Tata         |  55000 |
+|     9 | Amazon       |  70000 |
+|    12 | Google       |  52000 |
+|    13 | Accenture    |  51000 |
+|    14 | Amazon       |  70000 |
+|    15 | Tata         |  55000 |
+| 12345 | Amazon       |  70000 |
+|    16 | Flipkart     |  60000 |
+|    17 | Google       |  70000 |
+|    18 | Google       |  70000 |
+|    19 | Google       |  60000 |
+|     2 | ABC Corp     |  45000 |
+|     3 | ABC Corp     |  58000 |
+|    20 | NULL         |   NULL |
++-------+--------------+--------+
+15 rows in set (0.00 sec)
+
+mysql> DELETE FROM WORKS
+    -> WHERE e_id=20;
+Query OK, 1 row affected (0.03 sec)
+
+mysql> ALTER TABLE WORKS
+    -> ADD CONSTRAINT FOREIGN KEY(e_id) REFERENCES EMPLOYEE.e_id ON DELETE CASCADE;
+ERROR 1215 (HY000): Cannot add foreign key constraint
+mysql> ALTER TABLE WORKS
+    -> ALTER TABLE WORKS ADD CONSTRAINT FOREIGN KEY(e_id) REFERENCES EMPLOYEE(e_id) ON DELETE CASCADE;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'TABLE WORKS ADD CONSTRAINT FOREIGN KEY(e_id) REFERENCES EMPLOYEE(e_id) ON DELETE' at line 2
+mysql> ALTER TABLE WORKS
+    -> ADD CONSTRAINT FOREIGN KEY(e_id) REFERENCES EMPLOYEE(e_id) ON DELETE CASCADE;
+Query OK, 14 rows affected (0.54 sec)
+Records: 14  Duplicates: 0  Warnings: 0
+
+mysql> ALTER TABLE WORKS
+    -> \c
+mysql> ALTER TABLE MANAGES
+    -> \c
+mysql> DESCRIBE WORKS;
++--------------+-------------+------+-----+---------+-------+
+| Field        | Type        | Null | Key | Default | Extra |
++--------------+-------------+------+-----+---------+-------+
+| e_id         | int(11)     | YES  | MUL | NULL    |       |
+| company_name | varchar(30) | YES  |     | NULL    |       |
+| salary       | int(11)     | YES  |     | NULL    |       |
++--------------+-------------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
+
+mysql> DESCRIBE MANAGES;
++-----------+-------------+------+-----+---------+-------+
+| Field     | Type        | Null | Key | Default | Extra |
++-----------+-------------+------+-----+---------+-------+
+| dept_name | varchar(20) | YES  |     | NULL    |       |
+| e_id      | int(11)     | YES  |     | NULL    |       |
++-----------+-------------+------+-----+---------+-------+
+2 rows in set (0.00 sec)
+
+mysql> ALTER TABLE MANAGES
+    -> ADD CONSTRAINT
+    -> FOREIGN KEY(e_id) REFERENCES EMPLOYEE(e_id);
+Query OK, 3 rows affected (0.52 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> ALTER TABLE WORKS
+    -> ADD CONSTRAINT
+    -> FOREIGN KEY(company_name, city) REFERENCES COMPANY(company_name, city);
+ERROR 1072 (42000): Key column 'city' doesn't exist in table
+mysql> SELECT * FROM COMPANY
+    -> ORDER BY ASCENDING company_name, DESCENDING city;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'company_name, DESCENDING city' at line 2
+mysql> SELECT * FROM COMPANY
+    -> ORDER BY company_name ASC,city DESC;
++--------------+-----------+
+| company_name | city      |
++--------------+-----------+
+| ABC Corp     | Pune      |
+| ABC Corp     | Dehradun  |
+| ABC Corp     | Bangalore |
+| Accenture    | Mumbai    |
+| Accenture    | Delhi     |
+| Amazon       | Mumbai    |
+| CISCO        | KOLKATA   |
+| Flipkart     | Noida     |
+| Google       | Bangalore |
+| Mahindra     | Mumbai    |
+| Mahindra     | Chennai   |
+| Tata         | Pune      |
+| Tata         | Ahmedabad |
++--------------+-----------+
+13 rows in set (0.00 sec)
+
+mysql> SELECT EMPLOYEE.*, WORKS.company_name
+    -> FROM EMPLOYEE, WORKS
+    -> WHERE EMPLOYEE.e_id = WORKS.e_id
+    -> AND WORKS.company_name="Google"
+    -> UNION
+    -> SELECT EMPLOYEE.*, WORKS.company_name
+    -> FROM EMPLOYEE, WORKS
+    -> WHERE EMPLOYEE.e_id = WORKS.e_id
+    -> AND WORKS.company_name="Amazon"
+    -> ;
++-------+----------------+----------------+-----------+--------------+
+| e_id  | name           | street         | city      | company_name |
++-------+----------------+----------------+-----------+--------------+
+|    12 | Isha Kapoor    | Rajpur Road    | Dehradun  | Google       |
+|    17 | Yakein         | ABC Street     | Bangalore | Google       |
+|    18 | Sushant        | Street 1       | Bangalore | Google       |
+|    19 | Rohit          | Street 1B      | Noida     | Google       |
+|     9 | Siddharth Rao  | Gokulpeth Road | Nagpur    | Amazon       |
+|    14 | Tanvi Deshmukh | Nehru Place    | Delhi     | Amazon       |
+| 12345 | Sushant        | Cantt. Area    | Agra      | Amazon       |
++-------+----------------+----------------+-----------+--------------+
+7 rows in set (0.00 sec)
+
+mysql> SELECT EMPLOYEE.*, WORKS.company_name
+    -> FROM EMPLOYEE, WORKS
+    -> WHERE EMPLOYEE.e_id = WORKS.e_id
+    -> AND WORKS.company_name="Google"
+    -> UNION ALL
+    -> SELECT EMPLOYEE.*, WORKS.company_name
+    -> FROM EMPLOYEE, WORKS
+    -> WHERE EMPLOYEE.e_id = WORKS.e_id
+    -> AND WORKS.company_name="Amazon";
++-------+----------------+----------------+-----------+--------------+
+| e_id  | name           | street         | city      | company_name |
++-------+----------------+----------------+-----------+--------------+
+|    12 | Isha Kapoor    | Rajpur Road    | Dehradun  | Google       |
+|    17 | Yakein         | ABC Street     | Bangalore | Google       |
+|    18 | Sushant        | Street 1       | Bangalore | Google       |
+|    19 | Rohit          | Street 1B      | Noida     | Google       |
+|     9 | Siddharth Rao  | Gokulpeth Road | Nagpur    | Amazon       |
+|    14 | Tanvi Deshmukh | Nehru Place    | Delhi     | Amazon       |
+| 12345 | Sushant        | Cantt. Area    | Agra      | Amazon       |
++-------+----------------+----------------+-----------+--------------+
+7 rows in set (0.00 sec)
+
+mysql> UPDATE EMPLOYEE
+    -> SET city="Delhi"
+    -> WHERE e_id=12345;
+Query OK, 1 row affected (0.03 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> untee
+    -> ;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'untee' at line 1
+mysql> NOTEE;
