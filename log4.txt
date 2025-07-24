@@ -1,0 +1,967 @@
+mysql> SELECT EMPLOYEE.*, WORKS.company_name, WORKS.salary
+    -> FROM EMPLOYEE, WORKS WHERE EMPLOYEE.e_id = WORKS.e_id
+    -> AND EMPLOYEE.e_id IN
+    -> (SELECT e_id FROM WORKS
+    -> WHERE company_name IN ("Amazon", "ABC Corp"));
++-------+----------------+----------------+--------+--------------+--------+
+| e_id  | name           | street         | city   | company_name | salary |
++-------+----------------+----------------+--------+--------------+--------+
+|     9 | Siddharth Rao  | Gokulpeth Road | Nagpur | Amazon       |  70000 |
+|    14 | Tanvi Deshmukh | Nehru Place    | Delhi  | Amazon       |  70000 |
+| 12345 | Sushant        | Cantt. Area    | Delhi  | Amazon       |  70000 |
+|     2 | Gaurav         | Street 2C      | Pune   | ABC Corp     |  45000 |
+|     3 | Abhishek       | Street 3E      | Pune   | ABC Corp     |  58000 |
++-------+----------------+----------------+--------+--------------+--------+
+5 rows in set (0.01 sec)
+
+mysql> SELECT EMPLOYEE.*, MANAGES.dept_name
+    -> FROM EMPLOYEE, MANAGES
+    -> WHERE EMPLOYEE.e_id IN
+    -> (SELECT e_id FROM MANAGES
+    -> WHERE EMPLOYEE\c
+mysql> SELECT EMPLOYEE.*
+    -> FROM EMPLOYEE
+    -> WHERE EMPLOYEE.e_id IN
+    -> (SELECT e_id 
+    -> FROM MANAGES);
++------+--------------+-------------+-----------+
+| e_id | name         | street      | city      |
++------+--------------+-------------+-----------+
+|    1 | Aarav Sharma | MG Road     | Delhi     |
+|   12 | Isha Kapoor  | Rajpur Road | Dehradun  |
+|   15 | Arjun Bhatt  | Ashram Road | Ahmedabad |
++------+--------------+-------------+-----------+
+3 rows in set (0.01 sec)
+
+mysql> SELECT * FROM MANAGES;
++-----------+------+
+| dept_name | e_id |
++-----------+------+
+| IT        |    1 |
+| Sales     |   12 |
+| Marketing |   15 |
++-----------+------+
+3 rows in set (0.01 sec)
+
+mysql> SELECT * FROM EMPLOYEE,
+    -> dept_name FROM MANAGES
+    -> WHERE (e_id, dept_name) IN
+    -> (SELECT e_id, dept_name
+    -> FROM MANAGES);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'FROM MANAGES
+WHERE (e_id, dept_name) IN
+(SELECT e_id, dept_name
+FROM MANAGES)' at line 2
+mysql> SELECT * FROM EMPLOYEE,
+    -> dept_name FROM MANAGES;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'FROM MANAGES' at line 2
+mysql> SELECT EMPLOYEE.*, MANAGES.dept_name
+    -> WHERE (EMPLOYEE.e_id, MANAGES.dept_name) IN
+    -> (SELECT e_id, dept_name FROM MANAGES);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'WHERE (EMPLOYEE.e_id, MANAGES.dept_name) IN
+(SELECT e_id, dept_name FROM MANAGES' at line 2
+mysql> SELECT EMPLOYEE.*, MANAGES.dept_name
+    -> WHERE EMPLOYEE.e_id
+    -> IN
+    -> (SELECT e_id FROM MANAGES
+    -> WHERE dept_name = t.dept_name) AS t;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'WHERE EMPLOYEE.e_id
+IN
+(SELECT e_id FROM MANAGES
+WHERE dept_name = t.dept_name) ' at line 2
+mysql> SELECT EMPLOYEE.*, MANAGES.dept_name
+    -> WHERE EMPLOYEE.e_id
+    -> IN
+    -> (SELECT e_id FROM MANAGES
+    -> );
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'WHERE EMPLOYEE.e_id
+IN
+(SELECT e_id FROM MANAGES
+)' at line 2
+mysql> SELECT EMPLOYEE.*, MANAGES.dept_name
+    -> FROM EMPLOYEE, MANAGES
+    -> WHERE EMPLOYEE.e_id
+    -> IN
+    -> (SELECT e_id FROM MANAGES);
++------+--------------+-------------+-----------+-----------+
+| e_id | name         | street      | city      | dept_name |
++------+--------------+-------------+-----------+-----------+
+|    1 | Aarav Sharma | MG Road     | Delhi     | IT        |
+|   12 | Isha Kapoor  | Rajpur Road | Dehradun  | IT        |
+|   15 | Arjun Bhatt  | Ashram Road | Ahmedabad | IT        |
+|    1 | Aarav Sharma | MG Road     | Delhi     | Sales     |
+|   12 | Isha Kapoor  | Rajpur Road | Dehradun  | Sales     |
+|   15 | Arjun Bhatt  | Ashram Road | Ahmedabad | Sales     |
+|    1 | Aarav Sharma | MG Road     | Delhi     | Marketing |
+|   12 | Isha Kapoor  | Rajpur Road | Dehradun  | Marketing |
+|   15 | Arjun Bhatt  | Ashram Road | Ahmedabad | Marketing |
++------+--------------+-------------+-----------+-----------+
+9 rows in set (0.00 sec)
+
+mysql> SELECT EMPLOYEE.*, MANAGES.dept_name
+    -> FROM EMPLOYEE, MANAGES
+    -> WHERE (EMPLOYEE.e_id, MANAGES.dept_name)
+    -> IN
+    -> (SELECT e_id, dept_name
+    -> FROM MANAGES);
++------+--------------+-------------+-----------+-----------+
+| e_id | name         | street      | city      | dept_name |
++------+--------------+-------------+-----------+-----------+
+|    1 | Aarav Sharma | MG Road     | Delhi     | IT        |
+|   12 | Isha Kapoor  | Rajpur Road | Dehradun  | Sales     |
+|   15 | Arjun Bhatt  | Ashram Road | Ahmedabad | Marketing |
++------+--------------+-------------+-----------+-----------+
+3 rows in set (0.02 sec)
+
+mysql> SELECT * FROM WORKS;
++-------+--------------+--------+
+| e_id  | company_name | salary |
++-------+--------------+--------+
+|     1 | Accenture    |  51000 |
+|     8 | Tata         |  55000 |
+|     9 | Amazon       |  70000 |
+|    12 | Google       |  52000 |
+|    13 | Accenture    |  51000 |
+|    14 | Amazon       |  70000 |
+|    15 | Tata         |  55000 |
+| 12345 | Amazon       |  70000 |
+|    16 | Flipkart     |  60000 |
+|    17 | Google       |  70000 |
+|    18 | Google       |  70000 |
+|    19 | Google       |  60000 |
+|     2 | ABC Corp     |  45000 |
+|     3 | ABC Corp     |  58000 |
++-------+--------------+--------+
+14 rows in set (0.00 sec)
+
+mysql> SELECT company_name, COUNT(company_name)
+    -> FROM WORKS
+    -> GROUP BY company_name;
++--------------+---------------------+
+| company_name | COUNT(company_name) |
++--------------+---------------------+
+| ABC Corp     |                   2 |
+| Accenture    |                   2 |
+| Amazon       |                   3 |
+| Flipkart     |                   1 |
+| Google       |                   4 |
+| Tata         |                   2 |
++--------------+---------------------+
+6 rows in set (0.01 sec)
+
+mysql> SELECT AVG(salary) FROM
+    -> WORKS
+    -> GROUP BY
+    -> company_name;
++-------------+
+| AVG(salary) |
++-------------+
+|  51500.0000 |
+|  51000.0000 |
+|  70000.0000 |
+|  60000.0000 |
+|  63000.0000 |
+|  55000.0000 |
++-------------+
+6 rows in set (0.00 sec)
+
+mysql> SELECT company_name, AVG(salary)
+    -> FROM WORKS
+    -> GROUP BY company_name;
++--------------+-------------+
+| company_name | AVG(salary) |
++--------------+-------------+
+| ABC Corp     |  51500.0000 |
+| Accenture    |  51000.0000 |
+| Amazon       |  70000.0000 |
+| Flipkart     |  60000.0000 |
+| Google       |  63000.0000 |
+| Tata         |  55000.0000 |
++--------------+-------------+
+6 rows in set (0.00 sec)
+
+mysql> UPDATE
+    -> WORKS
+    -> SET salary = salary + 10000
+    -> WHERE NOT company_name = "Google";
+Query OK, 10 rows affected (0.04 sec)
+Rows matched: 10  Changed: 10  Warnings: 0
+
+mysql> SELECT company_name, AVG(salary) FROM WORKS GROUP BY company_name;
++--------------+-------------+
+| company_name | AVG(salary) |
++--------------+-------------+
+| ABC Corp     |  61500.0000 |
+| Accenture    |  61000.0000 |
+| Amazon       |  80000.0000 |
+| Flipkart     |  70000.0000 |
+| Google       |  63000.0000 |
+| Tata         |  65000.0000 |
++--------------+-------------+
+6 rows in set (0.00 sec)
+
+mysql> SELECT EMPLOYEE.e_id, WORKS.salary
+    -> WHERE EMPLOYEE.e_id = WORKS.e_id
+    -> AND EMPLOYEE.e_id
+    -> IN
+    -> (SELECT e_id FROM WORKS
+    -> WHERE \c
+mysql> SELECT EMPLOYEE.e_id, WORKS.salary
+    -> WHERE EMPLOYEE.e_id = WORKS.e_id
+    -> AND WORKS.salary > 
+    -> (SELECT AVG(salary) FROM WORKS
+    -> WHERE company_name = "Google");
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'WHERE EMPLOYEE.e_id = WORKS.e_id
+AND WORKS.salary > 
+(SELECT AVG(salary) FROM WO' at line 2
+mysql> SELECT EMPLOYEE.*, WORKS.salary
+    -> FROM EMPLOYEE, WORKS
+    -> WHERE EMPLOYEE.e_id = WORKS.e_id
+    -> AND WORKS.salary > (
+    -> SELECT AVG(salary)
+    -> FROM WORKS
+    -> WHERE company_name = "Google"
+    -> );
++-------+----------------+----------------+-----------+--------+
+| e_id  | name           | street         | city      | salary |
++-------+----------------+----------------+-----------+--------+
+|     8 | Ananya Joshi   | Law Garden     | Ahmedabad |  65000 |
+|     9 | Siddharth Rao  | Gokulpeth Road | Nagpur    |  80000 |
+|    14 | Tanvi Deshmukh | Nehru Place    | Delhi     |  80000 |
+|    15 | Arjun Bhatt    | Ashram Road    | Ahmedabad |  65000 |
+| 12345 | Sushant        | Cantt. Area    | Delhi     |  80000 |
+|    16 | Uday           | XYZ Street     | Noida     |  70000 |
+|    17 | Yakein         | ABC Street     | Bangalore |  70000 |
+|    18 | Sushant        | Street 1       | Bangalore |  70000 |
+|     3 | Abhishek       | Street 3E      | Pune      |  68000 |
++-------+----------------+----------------+-----------+--------+
+9 rows in set (0.00 sec)
+
+mysql> SELECT * FROM MANAGES;
++-----------+------+
+| dept_name | e_id |
++-----------+------+
+| IT        |    1 |
+| Sales     |   12 |
+| Marketing |   15 |
++-----------+------+
+3 rows in set (0.00 sec)
+
+mysql> SELECT * FROM EMPLOYEES;
+ERROR 1146 (42S02): Table 'EMP.EMPLOYEES' doesn't exist
+mysql> SELECT * FROM EMPLOYEE;
++-------+----------------+----------------+-----------+
+| e_id  | name           | street         | city      |
++-------+----------------+----------------+-----------+
+|     1 | Aarav Sharma   | MG Road        | Delhi     |
+|     2 | Gaurav         | Street 2C      | Pune      |
+|     3 | Abhishek       | Street 3E      | Pune      |
+|     8 | Ananya Joshi   | Law Garden     | Ahmedabad |
+|     9 | Siddharth Rao  | Gokulpeth Road | Nagpur    |
+|    12 | Isha Kapoor    | Rajpur Road    | Dehradun  |
+|    13 | Aditya Roy     | Civil Lines    | Kanpur    |
+|    14 | Tanvi Deshmukh | Nehru Place    | Delhi     |
+|    15 | Arjun Bhatt    | Ashram Road    | Ahmedabad |
+|    16 | Uday           | XYZ Street     | Noida     |
+|    17 | Yakein         | ABC Street     | Bangalore |
+|    18 | Sushant        | Street 1       | Bangalore |
+|    19 | Rohit          | Street 1B      | Noida     |
+| 12345 | Sushant        | Cantt. Area    | Delhi     |
++-------+----------------+----------------+-----------+
+14 rows in set (0.00 sec)
+
+mysql> SELECT * FROM COMPANY;
++--------------+-----------+
+| company_name | city      |
++--------------+-----------+
+| ABC Corp     | Bangalore |
+| ABC Corp     | Dehradun  |
+| ABC Corp     | Pune      |
+| Accenture    | Delhi     |
+| Accenture    | Mumbai    |
+| Amazon       | Mumbai    |
+| CISCO        | KOLKATA   |
+| Flipkart     | Noida     |
+| Google       | Bangalore |
+| Mahindra     | Chennai   |
+| Mahindra     | Mumbai    |
+| Tata         | Ahmedabad |
+| Tata         | Pune      |
++--------------+-----------+
+13 rows in set (0.00 sec)
+
+mysql> UPDATE EMPLOYEE
+    -> SET city="Mumbai"
+    -> WHERE EMPLOYEE.e_id
+    -> IN (
+    -> SELECT e_id FROM WORKS
+    -> WHERE company_name = "Amazon"
+    -> );
+Query OK, 3 rows affected (0.04 sec)
+Rows matched: 3  Changed: 3  Warnings: 0
+
+mysql> SELECT EMPLOYEE.name
+    -> FROM EMPLOYEE
+    -> WHERE EMPLOYEE.e_id IN
+    -> (SELECT e_id FROM MANAGES
+    -> WHERE e_id IN
+    ->   (SELECT e_id FROM EMPLOYEE
+    ->    WHERE city="Mumbai")
+    -> );
+Empty set (0.00 sec)
+
+mysql> SELECT * FROM MANAGES;
++-----------+------+
+| dept_name | e_id |
++-----------+------+
+| IT        |    1 |
+| Sales     |   12 |
+| Marketing |   15 |
++-----------+------+
+3 rows in set (0.00 sec)
+
+mysql> SELECT * FROM WORKS;
++-------+--------------+--------+
+| e_id  | company_name | salary |
++-------+--------------+--------+
+|     1 | Accenture    |  61000 |
+|     8 | Tata         |  65000 |
+|     9 | Amazon       |  80000 |
+|    12 | Google       |  52000 |
+|    13 | Accenture    |  61000 |
+|    14 | Amazon       |  80000 |
+|    15 | Tata         |  65000 |
+| 12345 | Amazon       |  80000 |
+|    16 | Flipkart     |  70000 |
+|    17 | Google       |  70000 |
+|    18 | Google       |  70000 |
+|    19 | Google       |  60000 |
+|     2 | ABC Corp     |  55000 |
+|     3 | ABC Corp     |  68000 |
++-------+--------------+--------+
+14 rows in set (0.00 sec)
+
+mysql> INSERT INTO MANAGES
+    -> VALUES
+    -> ("IT", 9),
+    -> ("Finance", 14);
+Query OK, 2 rows affected (0.03 sec)
+Records: 2  Duplicates: 0  Warnings: 0
+
+mysql> SELECT EMPLOYEE.name
+    -> FROM EMPLOYEE
+    -> WHERE EMPLOYEE.e_id IN
+    -> (SELECT e_id FROM MANAGES
+    -> WHERE e_id IN
+    ->   (SELECT e_id FROM EMPLOYEE
+    ->    WHERE city="Mumbai")
+    -> );
++----------------+
+| name           |
++----------------+
+| Siddharth Rao  |
+| Tanvi Deshmukh |
++----------------+
+2 rows in set (0.00 sec)
+
+mysql> SELECT EMPLOYEE.name as Mumbai_Managers
+    -> FROM EMPLOYEE
+    -> WHERE EMPLOYEE.e_id IN
+    -> (SELECT e_id FROM MANAGES
+    -> WHERE e_id IN
+    ->   (SELECT e_id FROM EMPLOYEE
+    ->    WHERE city="Mumbai")
+    -> );
++-----------------+
+| Mumbai_Managers |
++-----------------+
+| Siddharth Rao   |
+| Tanvi Deshmukh  |
++-----------------+
+2 rows in set (0.00 sec)
+
+mysql> SELECT * FROM EMPLOYEE
+    -> NATURAL JOIN MANAGES;
++------+----------------+----------------+-----------+-----------+
+| e_id | name           | street         | city      | dept_name |
++------+----------------+----------------+-----------+-----------+
+|    1 | Aarav Sharma   | MG Road        | Delhi     | IT        |
+|   12 | Isha Kapoor    | Rajpur Road    | Dehradun  | Sales     |
+|   15 | Arjun Bhatt    | Ashram Road    | Ahmedabad | Marketing |
+|    9 | Siddharth Rao  | Gokulpeth Road | Mumbai    | IT        |
+|   14 | Tanvi Deshmukh | Nehru Place    | Mumbai    | Finance   |
++------+----------------+----------------+-----------+-----------+
+5 rows in set (0.00 sec)
+
+mysql> SELECT EMPLOYEE.*, MANAGES.dept_name
+    -> FROM EMPLOYEE, MANAGES;
++-------+----------------+----------------+-----------+-----------+
+| e_id  | name           | street         | city      | dept_name |
++-------+----------------+----------------+-----------+-----------+
+|     1 | Aarav Sharma   | MG Road        | Delhi     | IT        |
+|     1 | Aarav Sharma   | MG Road        | Delhi     | Sales     |
+|     1 | Aarav Sharma   | MG Road        | Delhi     | Marketing |
+|     1 | Aarav Sharma   | MG Road        | Delhi     | IT        |
+|     1 | Aarav Sharma   | MG Road        | Delhi     | Finance   |
+|     2 | Gaurav         | Street 2C      | Pune      | IT        |
+|     2 | Gaurav         | Street 2C      | Pune      | Sales     |
+|     2 | Gaurav         | Street 2C      | Pune      | Marketing |
+|     2 | Gaurav         | Street 2C      | Pune      | IT        |
+|     2 | Gaurav         | Street 2C      | Pune      | Finance   |
+|     3 | Abhishek       | Street 3E      | Pune      | IT        |
+|     3 | Abhishek       | Street 3E      | Pune      | Sales     |
+|     3 | Abhishek       | Street 3E      | Pune      | Marketing |
+|     3 | Abhishek       | Street 3E      | Pune      | IT        |
+|     3 | Abhishek       | Street 3E      | Pune      | Finance   |
+|     8 | Ananya Joshi   | Law Garden     | Ahmedabad | IT        |
+|     8 | Ananya Joshi   | Law Garden     | Ahmedabad | Sales     |
+|     8 | Ananya Joshi   | Law Garden     | Ahmedabad | Marketing |
+|     8 | Ananya Joshi   | Law Garden     | Ahmedabad | IT        |
+|     8 | Ananya Joshi   | Law Garden     | Ahmedabad | Finance   |
+|     9 | Siddharth Rao  | Gokulpeth Road | Mumbai    | IT        |
+|     9 | Siddharth Rao  | Gokulpeth Road | Mumbai    | Sales     |
+|     9 | Siddharth Rao  | Gokulpeth Road | Mumbai    | Marketing |
+|     9 | Siddharth Rao  | Gokulpeth Road | Mumbai    | IT        |
+|     9 | Siddharth Rao  | Gokulpeth Road | Mumbai    | Finance   |
+|    12 | Isha Kapoor    | Rajpur Road    | Dehradun  | IT        |
+|    12 | Isha Kapoor    | Rajpur Road    | Dehradun  | Sales     |
+|    12 | Isha Kapoor    | Rajpur Road    | Dehradun  | Marketing |
+|    12 | Isha Kapoor    | Rajpur Road    | Dehradun  | IT        |
+|    12 | Isha Kapoor    | Rajpur Road    | Dehradun  | Finance   |
+|    13 | Aditya Roy     | Civil Lines    | Kanpur    | IT        |
+|    13 | Aditya Roy     | Civil Lines    | Kanpur    | Sales     |
+|    13 | Aditya Roy     | Civil Lines    | Kanpur    | Marketing |
+|    13 | Aditya Roy     | Civil Lines    | Kanpur    | IT        |
+|    13 | Aditya Roy     | Civil Lines    | Kanpur    | Finance   |
+|    14 | Tanvi Deshmukh | Nehru Place    | Mumbai    | IT        |
+|    14 | Tanvi Deshmukh | Nehru Place    | Mumbai    | Sales     |
+|    14 | Tanvi Deshmukh | Nehru Place    | Mumbai    | Marketing |
+|    14 | Tanvi Deshmukh | Nehru Place    | Mumbai    | IT        |
+|    14 | Tanvi Deshmukh | Nehru Place    | Mumbai    | Finance   |
+|    15 | Arjun Bhatt    | Ashram Road    | Ahmedabad | IT        |
+|    15 | Arjun Bhatt    | Ashram Road    | Ahmedabad | Sales     |
+|    15 | Arjun Bhatt    | Ashram Road    | Ahmedabad | Marketing |
+|    15 | Arjun Bhatt    | Ashram Road    | Ahmedabad | IT        |
+|    15 | Arjun Bhatt    | Ashram Road    | Ahmedabad | Finance   |
+|    16 | Uday           | XYZ Street     | Noida     | IT        |
+|    16 | Uday           | XYZ Street     | Noida     | Sales     |
+|    16 | Uday           | XYZ Street     | Noida     | Marketing |
+|    16 | Uday           | XYZ Street     | Noida     | IT        |
+|    16 | Uday           | XYZ Street     | Noida     | Finance   |
+|    17 | Yakein         | ABC Street     | Bangalore | IT        |
+|    17 | Yakein         | ABC Street     | Bangalore | Sales     |
+|    17 | Yakein         | ABC Street     | Bangalore | Marketing |
+|    17 | Yakein         | ABC Street     | Bangalore | IT        |
+|    17 | Yakein         | ABC Street     | Bangalore | Finance   |
+|    18 | Sushant        | Street 1       | Bangalore | IT        |
+|    18 | Sushant        | Street 1       | Bangalore | Sales     |
+|    18 | Sushant        | Street 1       | Bangalore | Marketing |
+|    18 | Sushant        | Street 1       | Bangalore | IT        |
+|    18 | Sushant        | Street 1       | Bangalore | Finance   |
+|    19 | Rohit          | Street 1B      | Noida     | IT        |
+|    19 | Rohit          | Street 1B      | Noida     | Sales     |
+|    19 | Rohit          | Street 1B      | Noida     | Marketing |
+|    19 | Rohit          | Street 1B      | Noida     | IT        |
+|    19 | Rohit          | Street 1B      | Noida     | Finance   |
+| 12345 | Sushant        | Cantt. Area    | Mumbai    | IT        |
+| 12345 | Sushant        | Cantt. Area    | Mumbai    | Sales     |
+| 12345 | Sushant        | Cantt. Area    | Mumbai    | Marketing |
+| 12345 | Sushant        | Cantt. Area    | Mumbai    | IT        |
+| 12345 | Sushant        | Cantt. Area    | Mumbai    | Finance   |
++-------+----------------+----------------+-----------+-----------+
+70 rows in set (0.00 sec)
+
+mysql> SELECT * FROM EMPLOYEE
+    -> LEFT JOIN MANAGES;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 2
+mysql> SELECT * FROM EMPLOYEE
+    -> LEFT JOIN MANAGES
+    -> ON NOT EMPLOYEE.e_id = MANAGES.e_id;
++-------+----------------+----------------+-----------+-----------+------+
+| e_id  | name           | street         | city      | dept_name | e_id |
++-------+----------------+----------------+-----------+-----------+------+
+|     2 | Gaurav         | Street 2C      | Pune      | IT        |    1 |
+|     3 | Abhishek       | Street 3E      | Pune      | IT        |    1 |
+|     8 | Ananya Joshi   | Law Garden     | Ahmedabad | IT        |    1 |
+|     9 | Siddharth Rao  | Gokulpeth Road | Mumbai    | IT        |    1 |
+|    12 | Isha Kapoor    | Rajpur Road    | Dehradun  | IT        |    1 |
+|    13 | Aditya Roy     | Civil Lines    | Kanpur    | IT        |    1 |
+|    14 | Tanvi Deshmukh | Nehru Place    | Mumbai    | IT        |    1 |
+|    15 | Arjun Bhatt    | Ashram Road    | Ahmedabad | IT        |    1 |
+|    16 | Uday           | XYZ Street     | Noida     | IT        |    1 |
+|    17 | Yakein         | ABC Street     | Bangalore | IT        |    1 |
+|    18 | Sushant        | Street 1       | Bangalore | IT        |    1 |
+|    19 | Rohit          | Street 1B      | Noida     | IT        |    1 |
+| 12345 | Sushant        | Cantt. Area    | Mumbai    | IT        |    1 |
+|     1 | Aarav Sharma   | MG Road        | Delhi     | Sales     |   12 |
+|     2 | Gaurav         | Street 2C      | Pune      | Sales     |   12 |
+|     3 | Abhishek       | Street 3E      | Pune      | Sales     |   12 |
+|     8 | Ananya Joshi   | Law Garden     | Ahmedabad | Sales     |   12 |
+|     9 | Siddharth Rao  | Gokulpeth Road | Mumbai    | Sales     |   12 |
+|    13 | Aditya Roy     | Civil Lines    | Kanpur    | Sales     |   12 |
+|    14 | Tanvi Deshmukh | Nehru Place    | Mumbai    | Sales     |   12 |
+|    15 | Arjun Bhatt    | Ashram Road    | Ahmedabad | Sales     |   12 |
+|    16 | Uday           | XYZ Street     | Noida     | Sales     |   12 |
+|    17 | Yakein         | ABC Street     | Bangalore | Sales     |   12 |
+|    18 | Sushant        | Street 1       | Bangalore | Sales     |   12 |
+|    19 | Rohit          | Street 1B      | Noida     | Sales     |   12 |
+| 12345 | Sushant        | Cantt. Area    | Mumbai    | Sales     |   12 |
+|     1 | Aarav Sharma   | MG Road        | Delhi     | Marketing |   15 |
+|     2 | Gaurav         | Street 2C      | Pune      | Marketing |   15 |
+|     3 | Abhishek       | Street 3E      | Pune      | Marketing |   15 |
+|     8 | Ananya Joshi   | Law Garden     | Ahmedabad | Marketing |   15 |
+|     9 | Siddharth Rao  | Gokulpeth Road | Mumbai    | Marketing |   15 |
+|    12 | Isha Kapoor    | Rajpur Road    | Dehradun  | Marketing |   15 |
+|    13 | Aditya Roy     | Civil Lines    | Kanpur    | Marketing |   15 |
+|    14 | Tanvi Deshmukh | Nehru Place    | Mumbai    | Marketing |   15 |
+|    16 | Uday           | XYZ Street     | Noida     | Marketing |   15 |
+|    17 | Yakein         | ABC Street     | Bangalore | Marketing |   15 |
+|    18 | Sushant        | Street 1       | Bangalore | Marketing |   15 |
+|    19 | Rohit          | Street 1B      | Noida     | Marketing |   15 |
+| 12345 | Sushant        | Cantt. Area    | Mumbai    | Marketing |   15 |
+|     1 | Aarav Sharma   | MG Road        | Delhi     | IT        |    9 |
+|     2 | Gaurav         | Street 2C      | Pune      | IT        |    9 |
+|     3 | Abhishek       | Street 3E      | Pune      | IT        |    9 |
+|     8 | Ananya Joshi   | Law Garden     | Ahmedabad | IT        |    9 |
+|    12 | Isha Kapoor    | Rajpur Road    | Dehradun  | IT        |    9 |
+|    13 | Aditya Roy     | Civil Lines    | Kanpur    | IT        |    9 |
+|    14 | Tanvi Deshmukh | Nehru Place    | Mumbai    | IT        |    9 |
+|    15 | Arjun Bhatt    | Ashram Road    | Ahmedabad | IT        |    9 |
+|    16 | Uday           | XYZ Street     | Noida     | IT        |    9 |
+|    17 | Yakein         | ABC Street     | Bangalore | IT        |    9 |
+|    18 | Sushant        | Street 1       | Bangalore | IT        |    9 |
+|    19 | Rohit          | Street 1B      | Noida     | IT        |    9 |
+| 12345 | Sushant        | Cantt. Area    | Mumbai    | IT        |    9 |
+|     1 | Aarav Sharma   | MG Road        | Delhi     | Finance   |   14 |
+|     2 | Gaurav         | Street 2C      | Pune      | Finance   |   14 |
+|     3 | Abhishek       | Street 3E      | Pune      | Finance   |   14 |
+|     8 | Ananya Joshi   | Law Garden     | Ahmedabad | Finance   |   14 |
+|     9 | Siddharth Rao  | Gokulpeth Road | Mumbai    | Finance   |   14 |
+|    12 | Isha Kapoor    | Rajpur Road    | Dehradun  | Finance   |   14 |
+|    13 | Aditya Roy     | Civil Lines    | Kanpur    | Finance   |   14 |
+|    15 | Arjun Bhatt    | Ashram Road    | Ahmedabad | Finance   |   14 |
+|    16 | Uday           | XYZ Street     | Noida     | Finance   |   14 |
+|    17 | Yakein         | ABC Street     | Bangalore | Finance   |   14 |
+|    18 | Sushant        | Street 1       | Bangalore | Finance   |   14 |
+|    19 | Rohit          | Street 1B      | Noida     | Finance   |   14 |
+| 12345 | Sushant        | Cantt. Area    | Mumbai    | Finance   |   14 |
++-------+----------------+----------------+-----------+-----------+------+
+65 rows in set (0.01 sec)
+
+mysql> SELECT * FROM EMPLOYEE
+    -> LEFT JOIN MANAGES
+    -> ON EMPLOYEE.e_id NOT IN (
+    -> SELECT e_id FROM MANAGES
+    -> );
++-------+----------------+----------------+-----------+-----------+------+
+| e_id  | name           | street         | city      | dept_name | e_id |
++-------+----------------+----------------+-----------+-----------+------+
+|     2 | Gaurav         | Street 2C      | Pune      | IT        |    1 |
+|     3 | Abhishek       | Street 3E      | Pune      | IT        |    1 |
+|     8 | Ananya Joshi   | Law Garden     | Ahmedabad | IT        |    1 |
+|    13 | Aditya Roy     | Civil Lines    | Kanpur    | IT        |    1 |
+|    16 | Uday           | XYZ Street     | Noida     | IT        |    1 |
+|    17 | Yakein         | ABC Street     | Bangalore | IT        |    1 |
+|    18 | Sushant        | Street 1       | Bangalore | IT        |    1 |
+|    19 | Rohit          | Street 1B      | Noida     | IT        |    1 |
+| 12345 | Sushant        | Cantt. Area    | Mumbai    | IT        |    1 |
+|     2 | Gaurav         | Street 2C      | Pune      | Sales     |   12 |
+|     3 | Abhishek       | Street 3E      | Pune      | Sales     |   12 |
+|     8 | Ananya Joshi   | Law Garden     | Ahmedabad | Sales     |   12 |
+|    13 | Aditya Roy     | Civil Lines    | Kanpur    | Sales     |   12 |
+|    16 | Uday           | XYZ Street     | Noida     | Sales     |   12 |
+|    17 | Yakein         | ABC Street     | Bangalore | Sales     |   12 |
+|    18 | Sushant        | Street 1       | Bangalore | Sales     |   12 |
+|    19 | Rohit          | Street 1B      | Noida     | Sales     |   12 |
+| 12345 | Sushant        | Cantt. Area    | Mumbai    | Sales     |   12 |
+|     2 | Gaurav         | Street 2C      | Pune      | Marketing |   15 |
+|     3 | Abhishek       | Street 3E      | Pune      | Marketing |   15 |
+|     8 | Ananya Joshi   | Law Garden     | Ahmedabad | Marketing |   15 |
+|    13 | Aditya Roy     | Civil Lines    | Kanpur    | Marketing |   15 |
+|    16 | Uday           | XYZ Street     | Noida     | Marketing |   15 |
+|    17 | Yakein         | ABC Street     | Bangalore | Marketing |   15 |
+|    18 | Sushant        | Street 1       | Bangalore | Marketing |   15 |
+|    19 | Rohit          | Street 1B      | Noida     | Marketing |   15 |
+| 12345 | Sushant        | Cantt. Area    | Mumbai    | Marketing |   15 |
+|     2 | Gaurav         | Street 2C      | Pune      | IT        |    9 |
+|     3 | Abhishek       | Street 3E      | Pune      | IT        |    9 |
+|     8 | Ananya Joshi   | Law Garden     | Ahmedabad | IT        |    9 |
+|    13 | Aditya Roy     | Civil Lines    | Kanpur    | IT        |    9 |
+|    16 | Uday           | XYZ Street     | Noida     | IT        |    9 |
+|    17 | Yakein         | ABC Street     | Bangalore | IT        |    9 |
+|    18 | Sushant        | Street 1       | Bangalore | IT        |    9 |
+|    19 | Rohit          | Street 1B      | Noida     | IT        |    9 |
+| 12345 | Sushant        | Cantt. Area    | Mumbai    | IT        |    9 |
+|     2 | Gaurav         | Street 2C      | Pune      | Finance   |   14 |
+|     3 | Abhishek       | Street 3E      | Pune      | Finance   |   14 |
+|     8 | Ananya Joshi   | Law Garden     | Ahmedabad | Finance   |   14 |
+|    13 | Aditya Roy     | Civil Lines    | Kanpur    | Finance   |   14 |
+|    16 | Uday           | XYZ Street     | Noida     | Finance   |   14 |
+|    17 | Yakein         | ABC Street     | Bangalore | Finance   |   14 |
+|    18 | Sushant        | Street 1       | Bangalore | Finance   |   14 |
+|    19 | Rohit          | Street 1B      | Noida     | Finance   |   14 |
+| 12345 | Sushant        | Cantt. Area    | Mumbai    | Finance   |   14 |
+|     1 | Aarav Sharma   | MG Road        | Delhi     | NULL      | NULL |
+|     9 | Siddharth Rao  | Gokulpeth Road | Mumbai    | NULL      | NULL |
+|    12 | Isha Kapoor    | Rajpur Road    | Dehradun  | NULL      | NULL |
+|    14 | Tanvi Deshmukh | Nehru Place    | Mumbai    | NULL      | NULL |
+|    15 | Arjun Bhatt    | Ashram Road    | Ahmedabad | NULL      | NULL |
++-------+----------------+----------------+-----------+-----------+------+
+50 rows in set (0.00 sec)
+
+mysql> SELECT DISTINCT * FROM EMPLOYEE
+    -> LEFT JOIN MANAGES
+    -> ON EMPLOYEE.e_id NOT IN (
+    -> SELECT e_id FROM MANAGES
+    -> );
++-------+----------------+----------------+-----------+-----------+------+
+| e_id  | name           | street         | city      | dept_name | e_id |
++-------+----------------+----------------+-----------+-----------+------+
+|     2 | Gaurav         | Street 2C      | Pune      | IT        |    1 |
+|     3 | Abhishek       | Street 3E      | Pune      | IT        |    1 |
+|     8 | Ananya Joshi   | Law Garden     | Ahmedabad | IT        |    1 |
+|    13 | Aditya Roy     | Civil Lines    | Kanpur    | IT        |    1 |
+|    16 | Uday           | XYZ Street     | Noida     | IT        |    1 |
+|    17 | Yakein         | ABC Street     | Bangalore | IT        |    1 |
+|    18 | Sushant        | Street 1       | Bangalore | IT        |    1 |
+|    19 | Rohit          | Street 1B      | Noida     | IT        |    1 |
+| 12345 | Sushant        | Cantt. Area    | Mumbai    | IT        |    1 |
+|     2 | Gaurav         | Street 2C      | Pune      | Sales     |   12 |
+|     3 | Abhishek       | Street 3E      | Pune      | Sales     |   12 |
+|     8 | Ananya Joshi   | Law Garden     | Ahmedabad | Sales     |   12 |
+|    13 | Aditya Roy     | Civil Lines    | Kanpur    | Sales     |   12 |
+|    16 | Uday           | XYZ Street     | Noida     | Sales     |   12 |
+|    17 | Yakein         | ABC Street     | Bangalore | Sales     |   12 |
+|    18 | Sushant        | Street 1       | Bangalore | Sales     |   12 |
+|    19 | Rohit          | Street 1B      | Noida     | Sales     |   12 |
+| 12345 | Sushant        | Cantt. Area    | Mumbai    | Sales     |   12 |
+|     2 | Gaurav         | Street 2C      | Pune      | Marketing |   15 |
+|     3 | Abhishek       | Street 3E      | Pune      | Marketing |   15 |
+|     8 | Ananya Joshi   | Law Garden     | Ahmedabad | Marketing |   15 |
+|    13 | Aditya Roy     | Civil Lines    | Kanpur    | Marketing |   15 |
+|    16 | Uday           | XYZ Street     | Noida     | Marketing |   15 |
+|    17 | Yakein         | ABC Street     | Bangalore | Marketing |   15 |
+|    18 | Sushant        | Street 1       | Bangalore | Marketing |   15 |
+|    19 | Rohit          | Street 1B      | Noida     | Marketing |   15 |
+| 12345 | Sushant        | Cantt. Area    | Mumbai    | Marketing |   15 |
+|     2 | Gaurav         | Street 2C      | Pune      | IT        |    9 |
+|     3 | Abhishek       | Street 3E      | Pune      | IT        |    9 |
+|     8 | Ananya Joshi   | Law Garden     | Ahmedabad | IT        |    9 |
+|    13 | Aditya Roy     | Civil Lines    | Kanpur    | IT        |    9 |
+|    16 | Uday           | XYZ Street     | Noida     | IT        |    9 |
+|    17 | Yakein         | ABC Street     | Bangalore | IT        |    9 |
+|    18 | Sushant        | Street 1       | Bangalore | IT        |    9 |
+|    19 | Rohit          | Street 1B      | Noida     | IT        |    9 |
+| 12345 | Sushant        | Cantt. Area    | Mumbai    | IT        |    9 |
+|     2 | Gaurav         | Street 2C      | Pune      | Finance   |   14 |
+|     3 | Abhishek       | Street 3E      | Pune      | Finance   |   14 |
+|     8 | Ananya Joshi   | Law Garden     | Ahmedabad | Finance   |   14 |
+|    13 | Aditya Roy     | Civil Lines    | Kanpur    | Finance   |   14 |
+|    16 | Uday           | XYZ Street     | Noida     | Finance   |   14 |
+|    17 | Yakein         | ABC Street     | Bangalore | Finance   |   14 |
+|    18 | Sushant        | Street 1       | Bangalore | Finance   |   14 |
+|    19 | Rohit          | Street 1B      | Noida     | Finance   |   14 |
+| 12345 | Sushant        | Cantt. Area    | Mumbai    | Finance   |   14 |
+|     1 | Aarav Sharma   | MG Road        | Delhi     | NULL      | NULL |
+|     9 | Siddharth Rao  | Gokulpeth Road | Mumbai    | NULL      | NULL |
+|    12 | Isha Kapoor    | Rajpur Road    | Dehradun  | NULL      | NULL |
+|    14 | Tanvi Deshmukh | Nehru Place    | Mumbai    | NULL      | NULL |
+|    15 | Arjun Bhatt    | Ashram Road    | Ahmedabad | NULL      | NULL |
++-------+----------------+----------------+-----------+-----------+------+
+50 rows in set (0.00 sec)
+
+mysql> SELECT * FROM EMPLOYEE
+    -> WHERE e_id NOT IN
+    -> (SELECT e_id FROM EMPLOYEE
+    -> LEFT JOIN MANAGES
+    -> ON MANAGES.e_id = EMPLOYEE.e_id);
+ERROR 1052 (23000): Column 'e_id' in field list is ambiguous
+mysql> SELECT * FROM EMPLOYEE E
+    -> WHERE E.e_id NOT IN
+    -> (SELECT e_id FROM EMPLOYEE
+    -> LEFT JOIN MANAGES
+    -> ON MANAGES.e_id = EMPLOYEE.e_id);
+ERROR 1052 (23000): Column 'e_id' in field list is ambiguous
+mysql> SELECT * FROM EMPLOYEE E
+    -> WHERE E.e_id NOT IN
+    -> (SELECT EMPLOYEE.e_id FROM EMPLOYEE
+    -> LEFT JOIN MANAGES
+    -> ON MANAGES.e_id = EMPLOYEE.e_id);
+Empty set (0.00 sec)
+
+mysql> SELECT EMPLOYEE.e_id FROM EMPLOYEE
+    -> LEFT JOIN MANAGES
+    -> ON MANAGES.e_id = EMPLOYEE.e_id;
++-------+
+| e_id  |
++-------+
+|     1 |
+|     2 |
+|     3 |
+|     8 |
+|     9 |
+|    12 |
+|    13 |
+|    14 |
+|    15 |
+|    16 |
+|    17 |
+|    18 |
+|    19 |
+| 12345 |
++-------+
+14 rows in set (0.00 sec)
+
+mysql> SELECT E.*
+    -> FROM Employee E
+    -> LEFT JOIN Manages M ON E.e_id = M.e_id
+    -> WHERE M.e_id IS NULL;
+ERROR 1146 (42S02): Table 'EMP.Employee' doesn't exist
+mysql> SELECT E.*
+    -> FROM EMPLOYEE E
+    -> LEFT JOIN Manages M ON E.e_id = M.e_id
+    -> WHERE M.e_id IS NULL;
+ERROR 1146 (42S02): Table 'EMP.Manages' doesn't exist
+mysql> SELECT E.*
+    -> FROM EMPLOYEE E
+    -> LEFT JOIN MANAGES M ON E.e_id = M.e_id
+    -> WHERE M.e_id IS NULL;
++-------+--------------+-------------+-----------+
+| e_id  | name         | street      | city      |
++-------+--------------+-------------+-----------+
+|     2 | Gaurav       | Street 2C   | Pune      |
+|     3 | Abhishek     | Street 3E   | Pune      |
+|     8 | Ananya Joshi | Law Garden  | Ahmedabad |
+|    13 | Aditya Roy   | Civil Lines | Kanpur    |
+|    16 | Uday         | XYZ Street  | Noida     |
+|    17 | Yakein       | ABC Street  | Bangalore |
+|    18 | Sushant      | Street 1    | Bangalore |
+|    19 | Rohit        | Street 1B   | Noida     |
+| 12345 | Sushant      | Cantt. Area | Mumbai    |
++-------+--------------+-------------+-----------+
+9 rows in set (0.00 sec)
+
+mysql> SELECT E.*, C.*
+    -> FROM EMPLOYEE E, COMPANY C
+    -> RIGHT OUTER JOIN WORKS
+    -> ON WORKS.e_id = E.e_id;
+ERROR 1054 (42S22): Unknown column 'E.e_id' in 'on clause'
+mysql> SELECT EMPLOYEE.*, COMPANY.*
+    -> FROM EMPLOYEE, COMPANY
+    -> RIGHT OUTER JOIN WORKS
+    -> ON WORKS.e_id = EMPLOYEE.e_id;
+ERROR 1054 (42S22): Unknown column 'EMPLOYEE.e_id' in 'on clause'
+mysql> SELECT EMPLOYEE.e_id, COMPANY.*
+    -> FROM EMPLOYEE, COMPANY
+    -> RIGHT OUTER JOIN WORKS
+    -> ON WORKS.e_id = EMPLOYEE.e_id;
+ERROR 1054 (42S22): Unknown column 'EMPLOYEE.e_id' in 'on clause'
+mysql> SELECT WORKS.*
+    -> FROM WORKS
+    -> RIGHT OUTER JOIN COMPANY
+    -> ON COMPANY.company_name = WORKS.company_name;
++-------+--------------+--------+
+| e_id  | company_name | salary |
++-------+--------------+--------+
+|     1 | Accenture    |  61000 |
+|     1 | Accenture    |  61000 |
+|     8 | Tata         |  65000 |
+|     8 | Tata         |  65000 |
+|     9 | Amazon       |  80000 |
+|    12 | Google       |  52000 |
+|    13 | Accenture    |  61000 |
+|    13 | Accenture    |  61000 |
+|    14 | Amazon       |  80000 |
+|    15 | Tata         |  65000 |
+|    15 | Tata         |  65000 |
+| 12345 | Amazon       |  80000 |
+|    16 | Flipkart     |  70000 |
+|    17 | Google       |  70000 |
+|    18 | Google       |  70000 |
+|    19 | Google       |  60000 |
+|     2 | ABC Corp     |  55000 |
+|     2 | ABC Corp     |  55000 |
+|     2 | ABC Corp     |  55000 |
+|     3 | ABC Corp     |  68000 |
+|     3 | ABC Corp     |  68000 |
+|     3 | ABC Corp     |  68000 |
+|  NULL | NULL         |   NULL |
+|  NULL | NULL         |   NULL |
+|  NULL | NULL         |   NULL |
++-------+--------------+--------+
+25 rows in set (0.00 sec)
+
+mysql> SELECT * FROM COMPANY;
++--------------+-----------+
+| company_name | city      |
++--------------+-----------+
+| ABC Corp     | Bangalore |
+| ABC Corp     | Dehradun  |
+| ABC Corp     | Pune      |
+| Accenture    | Delhi     |
+| Accenture    | Mumbai    |
+| Amazon       | Mumbai    |
+| CISCO        | KOLKATA   |
+| Flipkart     | Noida     |
+| Google       | Bangalore |
+| Mahindra     | Chennai   |
+| Mahindra     | Mumbai    |
+| Tata         | Ahmedabad |
+| Tata         | Pune      |
++--------------+-----------+
+13 rows in set (0.00 sec)
+
+mysql> SELECT DISTINCT company_name
+    -> FROM COMPANY;
++--------------+
+| company_name |
++--------------+
+| ABC Corp     |
+| Accenture    |
+| Amazon       |
+| CISCO        |
+| Flipkart     |
+| Google       |
+| Mahindra     |
+| Tata         |
++--------------+
+8 rows in set (0.00 sec)
+
+mysql> SELECT DISTINCT company_name
+    -> FROM WORKS;
++--------------+
+| company_name |
++--------------+
+| Accenture    |
+| Tata         |
+| Amazon       |
+| Google       |
+| Flipkart     |
+| ABC Corp     |
++--------------+
+6 rows in set (0.00 sec)
+
+mysql> SELECT WORKS.e_id, COMPANY.*
+    -> FROM WORKS
+    -> RIGHT OUTER JOIN COMPANY
+    -> ON COMPANY.company_name = WORKS.company_name;
++-------+--------------+-----------+
+| e_id  | company_name | city      |
++-------+--------------+-----------+
+|     1 | Accenture    | Delhi     |
+|     1 | Accenture    | Mumbai    |
+|     8 | Tata         | Ahmedabad |
+|     8 | Tata         | Pune      |
+|     9 | Amazon       | Mumbai    |
+|    12 | Google       | Bangalore |
+|    13 | Accenture    | Delhi     |
+|    13 | Accenture    | Mumbai    |
+|    14 | Amazon       | Mumbai    |
+|    15 | Tata         | Ahmedabad |
+|    15 | Tata         | Pune      |
+| 12345 | Amazon       | Mumbai    |
+|    16 | Flipkart     | Noida     |
+|    17 | Google       | Bangalore |
+|    18 | Google       | Bangalore |
+|    19 | Google       | Bangalore |
+|     2 | ABC Corp     | Bangalore |
+|     2 | ABC Corp     | Dehradun  |
+|     2 | ABC Corp     | Pune      |
+|     3 | ABC Corp     | Bangalore |
+|     3 | ABC Corp     | Dehradun  |
+|     3 | ABC Corp     | Pune      |
+|  NULL | CISCO        | KOLKATA   |
+|  NULL | Mahindra     | Chennai   |
+|  NULL | Mahindra     | Mumbai    |
++-------+--------------+-----------+
+25 rows in set (0.00 sec)
+
+mysql> SELECT WORKS.e_id, COMPANY.company_name
+    -> FROM WORKS
+    -> RIGHT OUTER JOIN COMPANY
+    -> ON COMPANY.company_name = WORKS.company_name;
++-------+--------------+
+| e_id  | company_name |
++-------+--------------+
+|     1 | Accenture    |
+|     1 | Accenture    |
+|     8 | Tata         |
+|     8 | Tata         |
+|     9 | Amazon       |
+|    12 | Google       |
+|    13 | Accenture    |
+|    13 | Accenture    |
+|    14 | Amazon       |
+|    15 | Tata         |
+|    15 | Tata         |
+| 12345 | Amazon       |
+|    16 | Flipkart     |
+|    17 | Google       |
+|    18 | Google       |
+|    19 | Google       |
+|     2 | ABC Corp     |
+|     2 | ABC Corp     |
+|     2 | ABC Corp     |
+|     3 | ABC Corp     |
+|     3 | ABC Corp     |
+|     3 | ABC Corp     |
+|  NULL | CISCO        |
+|  NULL | Mahindra     |
+|  NULL | Mahindra     |
++-------+--------------+
+25 rows in set (0.00 sec)
+
+mysql> SELECT DISTINCT EMPLOYEE.*, WORKS.salary, COMPANY.company_name
+    -> FROM EMPLOYEE
+    -> RIGHT OUTER JOIN WORKS
+    -> ON WORKS.e_id = EMPLOYEE.e_id
+    -> RIGHT OUTER JOIN COMPANY
+    -> ON COMPANY.company_name = WORKS.company_name
+    -> ORDER BY EMPLOYEE.e_id ASC;
++-------+----------------+----------------+-----------+--------+--------------+
+| e_id  | name           | street         | city      | salary | company_name |
++-------+----------------+----------------+-----------+--------+--------------+
+|  NULL | NULL           | NULL           | NULL      |   NULL | Mahindra     |
+|  NULL | NULL           | NULL           | NULL      |   NULL | CISCO        |
+|     1 | Aarav Sharma   | MG Road        | Delhi     |  61000 | Accenture    |
+|     2 | Gaurav         | Street 2C      | Pune      |  55000 | ABC Corp     |
+|     3 | Abhishek       | Street 3E      | Pune      |  68000 | ABC Corp     |
+|     8 | Ananya Joshi   | Law Garden     | Ahmedabad |  65000 | Tata         |
+|     9 | Siddharth Rao  | Gokulpeth Road | Mumbai    |  80000 | Amazon       |
+|    12 | Isha Kapoor    | Rajpur Road    | Dehradun  |  52000 | Google       |
+|    13 | Aditya Roy     | Civil Lines    | Kanpur    |  61000 | Accenture    |
+|    14 | Tanvi Deshmukh | Nehru Place    | Mumbai    |  80000 | Amazon       |
+|    15 | Arjun Bhatt    | Ashram Road    | Ahmedabad |  65000 | Tata         |
+|    16 | Uday           | XYZ Street     | Noida     |  70000 | Flipkart     |
+|    17 | Yakein         | ABC Street     | Bangalore |  70000 | Google       |
+|    18 | Sushant        | Street 1       | Bangalore |  70000 | Google       |
+|    19 | Rohit          | Street 1B      | Noida     |  60000 | Google       |
+| 12345 | Sushant        | Cantt. Area    | Mumbai    |  80000 | Amazon       |
++-------+----------------+----------------+-----------+--------+--------------+
+16 rows in set (0.00 sec)
+
+mysql> NOTEE
+mysql> SELECT e.*, w.company_name, w.salary
+    -> FROM EMPLOYEE e
+    -> JOIN WORKS w ON e.e_id = w.e_id
+    -> JOIN COMPANY c ON w.company_name = c.company_name
+    -> WHERE c.city = "Delhi"
+    -> UNION
+    -> SELECT e.*, w.company_name, w.salary
+    -> FROM EMPLOYEE e
+    -> JOIN WORKS w ON e.e_id = w.e_id
+    -> JOIN COMPANY c ON w.company_name = c.company_name
+    -> WHERE c.city = "Mumbai";
++-------+----------------+----------------+--------+--------------+--------+
+| e_id  | name           | street         | city   | company_name | salary |
++-------+----------------+----------------+--------+--------------+--------+
+|     1 | Aarav Sharma   | MG Road        | Delhi  | Accenture    |  61000 |
+|    13 | Aditya Roy     | Civil Lines    | Delhi  | Accenture    |  61000 |
+|     9 | Siddharth Rao  | Gokulpeth Road | Mumbai | Amazon       |  80000 |
+|    14 | Tanvi Deshmukh | Nehru Place    | Mumbai | Amazon       |  80000 |
+| 12345 | Sushant        | Cantt. Area    | Mumbai | Amazon       |  80000 |
++-------+----------------+----------------+--------+--------------+--------+
+5 rows in set (0.00 sec)
+
+
+mysql> NOTEE

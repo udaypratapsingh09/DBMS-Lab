@@ -1,0 +1,68 @@
+mysql> ^C
+mysql> INSERT INTO BORROWER
+    -> VALUES
+    -> \c
+mysql> INSERT INTO BORROWER
+    -> VALUES
+    -> (1, “Uday”, “2025-07,11”, “Wings of Fire”),
+    -> (2, “Yakein”, “2025-07,13”, “Atomic Habits”),
+    -> (3, “Sushant”, “2025-07-08”, “The Book Thief”);
+    -> //
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'of Fire”),
+(2, “Yakein”, “2025-07,13”, “Atomic Habits”),
+(3, “Su' at line 3
+mysql> INSERT INTO BORROWER
+    -> VALUES
+    -> (1, “Uday”, “2025-07-11”, “Wings of Fire”),
+    -> (2, “Yakein”, “2025-07-13”, “Atomic Habits”),
+    -> (3, “Sushant”, “2025-07-08”, “The Book Thief”);
+    -> //
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'of Fire”),
+(2, “Yakein”, “2025-07-13”, “Atomic Habits”),
+(3, “Su' at line 3
+mysql> INSERT INTO BORROWER
+    -> (RollNo, Name, DateOfIssue, NameOfBook)
+    -> VALUES
+    -> (1, “Uday”, “2025-07-11”, “Wings of Fire”),
+    -> (2, “Yakein”, “2025-07-13”, “Atomic Habits”),
+    -> (3, “Sushant”, “2025-07-08”, “The Book Thief”);
+    -> //
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'of Fire”),
+(2, “Yakein”, “2025-07-13”, “Atomic Habits”),
+(3, “Su' at line 4
+mysql> INSERT INTO BORROWER
+    -> VALUES
+    -> (1, “Uday”, “2025-07-11”, “Wings of Fire”, “I”),
+    -> (2, “Yakein”, “2025-07-13”, “Atomic Habits”, “I”),
+    -> (3, “Sushant”, “2025-07-08”, “The Book Thief”, “I”);
+    -> //
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'of Fire”, “I”),
+(2, “Yakein”, “2025-07-13”, “Atomic Habits”, ' at line 3
+mysql> INSERT INTO BORROWER
+    -> VALUES
+    -> (1, "Uday", "2025-07-11", "Wings of Fire", "I"),
+    -> (2, "Yakein", "2025-07-13", "Atomic Habits", "I"),
+    -> (3, "Sushant", "2025-07-08", "The Book Thief", "I");
+    -> //
+ERROR 1146 (42S02): Table '7360_ASSIGN4.BORROWER' doesn't exist
+mysql> INSERT INTO Borrower
+    -> ^C
+mysql> INSERT INTO Borrower
+    -> VALUES
+    -> (1, "Uday", "2025-07-11", "Wings of Fire", "I"),
+    -> (2, "Yakein", "2025-07-13", "Atomic Habits", "I"),
+    -> (3, "Sushant", "2025-07-08", "The Book Thief", "I");
+    -> //
+Query OK, 3 rows affected (0.04 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql>     1. create procedure getInfo(roll int, bookName varchar(30))
+    ->        begin
+    ->            select roll, bookName;
+    ->        end;
+    -> \c
+mysql> create procedure getInfo(roll int, bookName varchar(30))
+    ->        begin
+    ->            select roll, bookName;
+    ->        end;\
+    -> \c
