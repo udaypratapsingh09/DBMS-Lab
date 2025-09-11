@@ -126,22 +126,6 @@ WriteResult({ "nInserted" : 1 })
 { "_id" : ObjectId("68b68dce52e7951fdef5930c"), "RollNo" : 4, "Name" : "Rohit", "Branch" : "Comp", "CGPA" : 9, "City" : "Jammu" }
 { "_id" : ObjectId("68b68dce52e7951fdef5930d"), "RollNo" : 5, "Name" : "Ram", "Branch" : "IT", "CGPA" : 8, "City" : "Mumbai" }
 { "_id" : ObjectId("68b69238f67421d0f569e455"), "RollNo" : 7, "Name" : "Shreyash", "Branch" : "Comp", "CGPA" : 9.5, "City" : "Bhopal" }
-> db.Students.find({Branch: "Comp"}).sort({score: -1}).limit(1);
-{ "_id" : ObjectId("68b68dce52e7951fdef59309"), "RollNo" : 1, "Name" : "Uday", "Branch" : "Comp", "CGPA" : 8, "City" : "Pune" }
-> db.Students.find({Branch: "Comp"}).sort({score: 1}).limit(1);
-{ "_id" : ObjectId("68b68dce52e7951fdef59309"), "RollNo" : 1, "Name" : "Uday", "Branch" : "Comp", "CGPA" : 8, "City" : "Pune" }
-> db.Students.find({Branch: "Comp"}).sort({score: 1}).limit(3);
-{ "_id" : ObjectId("68b68dce52e7951fdef59309"), "RollNo" : 1, "Name" : "Uday", "Branch" : "Comp", "CGPA" : 8, "City" : "Pune" }
-{ "_id" : ObjectId("68b68dce52e7951fdef5930c"), "RollNo" : 4, "Name" : "Rohit", "Branch" : "Comp", "CGPA" : 9, "City" : "Jammu" }
-{ "_id" : ObjectId("68b69238f67421d0f569e455"), "RollNo" : 7, "Name" : "Shreyash", "Branch" : "Comp", "CGPA" : 9.5, "City" : "Bhopal" }
-> db.Students.find({Branch: "Comp"}).sort({score: -1}).limit(3);
-{ "_id" : ObjectId("68b68dce52e7951fdef59309"), "RollNo" : 1, "Name" : "Uday", "Branch" : "Comp", "CGPA" : 8, "City" : "Pune" }
-{ "_id" : ObjectId("68b68dce52e7951fdef5930c"), "RollNo" : 4, "Name" : "Rohit", "Branch" : "Comp", "CGPA" : 9, "City" : "Jammu" }
-{ "_id" : ObjectId("68b69238f67421d0f569e455"), "RollNo" : 7, "Name" : "Shreyash", "Branch" : "Comp", "CGPA" : 9.5, "City" : "Bhopal" }
-> db.Students.find({Branch: "Comp"}).sort({CGPA: -1}).limit(3);
-{ "_id" : ObjectId("68b69238f67421d0f569e455"), "RollNo" : 7, "Name" : "Shreyash", "Branch" : "Comp", "CGPA" : 9.5, "City" : "Bhopal" }
-{ "_id" : ObjectId("68b68dce52e7951fdef5930c"), "RollNo" : 4, "Name" : "Rohit", "Branch" : "Comp", "CGPA" : 9, "City" : "Jammu" }
-{ "_id" : ObjectId("68b68dce52e7951fdef59309"), "RollNo" : 1, "Name" : "Uday", "Branch" : "Comp", "CGPA" : 8, "City" : "Pune" }
 > db.Students.find({Branch: "Comp"}).sort({CGPA: -1}).limit(1);
 { "_id" : ObjectId("68b69238f67421d0f569e455"), "RollNo" : 7, "Name" : "Shreyash", "Branch" : "Comp", "CGPA" : 9.5, "City" : "Bhopal" }
 
