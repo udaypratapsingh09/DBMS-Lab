@@ -1,0 +1,50 @@
+> use Assignment_11;
+switched to db Assignment_11
+> db.Expenses.insertMany([
+...   { Category: "Food", Description: "Campus cafeteria lunch", Amount: 45 },
+...   { Category: "Food", Description: "Groceries for week", Amount: 800 },
+...   { Category: "Food", Description: "Coffee and snacks", Amount: 25 },
+...   { Category: "Transport", Description: "Monthly bus pass", Amount: 500 },
+...   { Category: "Transport", Description: "Bike repair parts", Amount: 300 },
+...   { Category: "Utilities", Description: "Shared apartment electricity", Amount: 1600 },
+...   { Category: "Utilities", Description: "Wi-Fi internet bill", Amount: 400 },
+...   { Category: "Entertainment", Description: "Movie night with friends", Amount: 600 },
+...   { Category: "Entertainment", Description: "Streaming service subscription", Amount: 150 }
+... ]);
+{
+	"acknowledged" : true,
+	"insertedIds" : [
+		ObjectId("68db6e7f8196d769cacca959"),
+		ObjectId("68db6e7f8196d769cacca95a"),
+		ObjectId("68db6e7f8196d769cacca95b"),
+		ObjectId("68db6e7f8196d769cacca95c"),
+		ObjectId("68db6e7f8196d769cacca95d"),
+		ObjectId("68db6e7f8196d769cacca95e"),
+		ObjectId("68db6e7f8196d769cacca95f"),
+		ObjectId("68db6e7f8196d769cacca960"),
+		ObjectId("68db6e7f8196d769cacca961")
+	]
+}
+> var mapFunction = function(){
+... emit(this.Category, this.Amount);
+... };
+> var reducerFunction = function(Category, Amounts){
+... return Array.sum(Amounts);
+... };
+> db.Expenses.mapReduce(mapFunction, reducerFunction, {out: "ExpensesByCategory"});
+{
+	"result" : "ExpensesByCategory",
+	"timeMillis" : 442,
+	"counts" : {
+		"input" : 9,
+		"emit" : 9,
+		"reduce" : 4,
+		"output" : 4
+	},
+	"ok" : 1
+}
+> db.ExpensesByCategory.find().pretty();
+{ "_id" : "Entertainment", "value" : 750 }
+{ "_id" : "Food", "value" : 870 }
+{ "_id" : "Transport", "value" : 800 }
+{ "_id" : "Utilities", "value" : 2000 }
