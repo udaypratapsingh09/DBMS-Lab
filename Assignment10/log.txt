@@ -1,43 +1,73 @@
 db.Employees.insertMany([
-{EmpID: 1, Name: "Rishabh", Salary: 60000, Dept: "Accounting"},
-{EmpID: 2, Name: "Sushant", Salary: 75000, Dept: "Marketing"}, 
-{EmpID: 3, Name: "Ajay", Salary: 74000, Dept: "Accounting"}, 
-{EmpID: 4, Name: "Abhishek", Salary: 82000, Dept: "Development"}, 
-{EmpID: 5, Name: "Gaurav", Salary: 74000, Dept: "Development"}, 
-{EmpID: 6, Name: "Yakein", Salary: 75000, Dept: "Marketing"}, 
-{EmpID: 7, Name: "Ranvijay", Salary: 78000, Dept: "Customer Support"}, 
-{EmpID: 8, Name: "Shivam", Salary: 65000, Dept: "Customer Support"}, 
-{EmpID: 9, Name: "Uday", Salary: 75000, Dept: "Marketing"}, 
-{EmpID: 10, Name: "Rohit", Salary: 85000, Dept: "Development"}, 
-{EmpID: 11, Name: "Aditya", Salary: 80000, Dept: "Accounting"}, 
-{EmpID: 12, Name: "Ankit", Salary: 73000, Dept: "Customer Support"}
-{EmpID: 13, Name: "Raj", Salary: 75000, Dept: "Customer Support"},
-{EmpID: 14, Name: "Samir", Salary: 70000, Dept: "Accounting"}
+  {EmpID: 1, Name: "Rishabh", Salary: 60000, Dept: "Accounting"},
+  {EmpID: 2, Name: "Sushant", Salary: 75000, Dept: "Marketing"}, 
+  {EmpID: 3, Name: "Ajay", Salary: 74000, Dept: "Accounting"}, 
+  {EmpID: 4, Name: "Abhishek", Salary: 82000, Dept: "Development"}, 
+  {EmpID: 5, Name: "Gaurav", Salary: 74000, Dept: "Development"}, 
+  {EmpID: 6, Name: "Yakein", Salary: 75000, Dept: "Marketing"}, 
+  {EmpID: 7, Name: "Ranvijay", Salary: 78000, Dept: "Customer Support"}, 
+  {EmpID: 8, Name: "Shivam", Salary: 65000, Dept: "Customer Support"}, 
+  {EmpID: 9, Name: "Uday", Salary: 75000, Dept: "Marketing"}, 
+  {EmpID: 10, Name: "Rohit", Salary: 85000, Dept: "Development"}, 
+  {EmpID: 11, Name: "Aditya", Salary: 80000, Dept: "Accounting"}, 
+  {EmpID: 12, Name: "Ankit", Salary: 73000, Dept: "Customer Support"}
+  {EmpID: 13, Name: "Raj", Salary: 75000, Dept: "Customer Support"},
+  {EmpID: 14, Name: "Samir", Salary: 70000, Dept: "Accounting"}
 ]);
+
+db.Employees.createIndex({Name: 1, Dept: 1});
+{
+	"createdCollectionAutomatically" : false,
+	"numIndexesBefore" : 1,
+	"numIndexesAfter" : 2,
+	"ok" : 1
+};
+
+db.Employees.getIndexes();
+[
+	{
+		"v" : 2,
+		"key" : {
+			"_id" : 1
+		},
+		"name" : "_id_",
+		"ns" : "Assignment_10.Employees"
+	},
+	{
+		"v" : 2,
+		"key" : {
+			"Name" : 1,
+			"Dept" : 1
+		},
+		"name" : "Name_1_Dept_1",
+		"ns" : "Assignment_10.Employees"
+	}
+]
 
 db.Employees.aggregate([
 {
-   $match: {Salary: {$gt: 75000}}
+  $match: {Salary: {$gt: 75000}}
 }
 ]);
 
 db.Employees.aggregate([
 {
-   $group: { _id: "$Dept", totalEmployees: {$sum: 1} }
+  $group: { _id: "$Dept", totalEmployees: {$sum: 1} }
 }
 ]);
 
 db.Employees.aggregate([
 {
-   $match: {Salary: {$gt: 75000}}
+  $match: {Salary: {$gt: 75000}}
 },
 {
-   $group: { _id: "$Dept", EmployeesEarningMoreThan75k: {$sum: 1} }
+  $group: { _id: "$Dept", EmployeesEarningMoreThan75k: {$sum: 1} }
 }
 ]);
 
 db.Employees.aggregate([
 {
-   $sort: {Dept: 1}
+  $sort: {Dept: 1}
 }
 ]);
+
