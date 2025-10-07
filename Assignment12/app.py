@@ -21,6 +21,12 @@ def find_documents():
     for doc in collection.find():
         print(doc)
 
+def search_by_name():
+    name = input("Enter the name to search record: ")
+    for doc in collection.find({"name": name}):
+        print(doc)
+    
+
 # Update a document
 def update_document():
     name = input("Enter the name to update: ")
@@ -45,29 +51,30 @@ def delete_document():
 
 # Main menu loop
 def main():
-    while True:
+    choice = 1
+    while choice != 0:
         print("\n--- MongoDB Menu ---")
+        print("0. Exit")
         print("1. Insert Document")
         print("2. Find Documents")
-        print("3. Update Document")
-        print("4. Delete Document")
-        print("5. Exit")
+        print("3. Search Documents")
+        print("4. Update Document")
+        print("5. Delete Document")
 
-        choice = input("Enter your choice (1-5): ")
+        choice = int(input("Enter your choice (1-5): "))
 
-        if choice == '1':
+        if choice == 1:
             insert_document()
-        elif choice == '2':
+        elif choice == 2:
             find_documents()
-        elif choice == '3':
+        elif choice == 3:
+            search_by_name()
+        elif choice == 4:
             update_document()
-        elif choice == '4':
+        elif choice == 5:
             delete_document()
-        elif choice == '5':
-            print("Exiting program.")
-            break
-        else:
-            print("Invalid choice. Try again.")
+    else:
+        print("Exiting...")
 
 if __name__ == "__main__":
     main()
